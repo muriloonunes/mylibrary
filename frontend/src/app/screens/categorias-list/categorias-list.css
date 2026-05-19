@@ -17,19 +17,94 @@
   font-size: 1.8rem;
   font-weight: 600;
   color: var(--p-text-color);
-  letter-spacing: -0.5px;
 }
 
+.categorias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+@media (min-width: 1200px) {
+  .categorias-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Cards Comuns */
+::ng-deep .categoria-card, ::ng-deep .card-criar {
+  height: 100%;
+  border: 1px solid var(--p-content-border-color) !important;
+  border-radius: 12px !important;
+}
+
+.card-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.card-text h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--p-text-color);
+}
+
+.description {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--p-text-muted-color);
+}
+
+/* Card Criar Específico */
+::ng-deep .card-criar {
+  border-style: dashed !important;
+  background: transparent !important;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+::ng-deep .card-criar:hover {
+  border-color: var(--p-primary-color) !important;
+  background: var(--p-content-hover-background) !important;
+}
+
+.row-layout {
+  justify-content: flex-start;
+}
+
+.criar-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background-color: rgba(var(--p-primary-color-rgb, 234, 108, 134), 0.15);
+  color: var(--p-primary-color);
+  flex-shrink: 0;
+}
+
+::ng-deep .card-criar:hover .criar-icon-wrapper {
+  transform: scale(1.05);
+}
+
+/* Dialog e Form */
 ::ng-deep .dialog-cadastro {
   width: 40rem;
 }
-
 
 .form-container {
   display: flex;
   flex-direction: column;
 }
-
 
 .form-group {
   display: flex;
@@ -38,41 +113,26 @@
   margin-bottom: 1rem;
 }
 
-
-.form-group.mb-large {
-  margin-bottom: 1.5rem;
-}
-
-
 .form-label {
   font-weight: 600;
   color: var(--p-text-color);
-}
-
-
-.error-message {
-  color: var(--p-red-500);
-  font-size: 0.875rem;
 }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
+  margin-top: 1rem;
 }
 
 .error-message {
   color: var(--p-red-500);
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   margin-top: 0.25rem;
 }
 
-.error-message.server-error {
-  font-weight: 500;
-  animation: fadeIn 0.2s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Misc */
+::ng-deep .p-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }

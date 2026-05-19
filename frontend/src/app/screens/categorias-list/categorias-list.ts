@@ -7,6 +7,7 @@ import {FormsModule, NgForm} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {NgClass} from '@angular/common';
 import {HttpErrorResponse} from '@angular/common/http';
+import {Card} from 'primeng/card';
 
 @Component({
   selector: 'app-categorias-list',
@@ -15,7 +16,8 @@ import {HttpErrorResponse} from '@angular/common/http';
     Dialog,
     FormsModule,
     InputText,
-    NgClass
+    NgClass,
+    Card
   ],
   templateUrl: './categorias-list.html',
   styleUrl: './categorias-list.css',
@@ -57,6 +59,7 @@ export class CategoriasList implements OnInit {
           this.cd.markForCheck();
         },
         error: (err: HttpErrorResponse) => {
+          console.log(err)
           if (err.status === 400 && err.error?.message) {
             this.erroBackend = err.error.message;
           } else {
@@ -65,6 +68,20 @@ export class CategoriasList implements OnInit {
           this.cd.markForCheck();
         }
       });
+    }
+  }
+
+  deletarCategoria(id: number | undefined) {
+    if (id) {
+      this.service.apagarCategoria(id).subscribe({
+        next: () => {
+          this.categorias = this.categorias.filter(c => c.id !== id);
+          this.cd.markForCheck();
+        },
+        error: err => {
+          console.log('Erro ao apagar categoria ',err)
+        }
+      })
     }
   }
 
