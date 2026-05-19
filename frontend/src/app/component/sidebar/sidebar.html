@@ -1,0 +1,33 @@
+<div class="sidebar-container" [ngClass]="{'collapsed': colapsada}">
+  <div class="sidebar-header">
+    <p-button
+      [icon]="'pi pi-bars'"
+      (onClick)="toggleColapsada()"
+      styleClass="p-button-text p-button-secondary toggle-btn">
+    </p-button>
+    @if (!colapsada) {
+      <span class="app-name">MyLibrary</span>
+    }
+  </div>
+
+  <ul class="menu-list">
+    @for (item of itensMenu; track item) {
+      <li [routerLink]="item.rota"
+          routerLinkActive="active-menu"
+          class="menu-item">
+        <i [class]="item.icon"></i>
+        <span class="menu-label">{{ item.label }}</span>
+      </li>
+    }
+  </ul>
+
+  <div class="sidebar-footer">
+    <p-button
+      [icon]="modoEscuro ? 'pi pi-moon' : 'pi pi-sun'"
+      (onClick)="toggleTema()"
+      [rounded]="true"
+      [text]="true"
+      severity="secondary">
+    </p-button>
+  </div>
+</div>
