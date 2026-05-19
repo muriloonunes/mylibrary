@@ -6,8 +6,6 @@ import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-import java.util.Objects;
-
 /**
  *
  * @author Murilo Nunes <murilo_no@outlook.com>

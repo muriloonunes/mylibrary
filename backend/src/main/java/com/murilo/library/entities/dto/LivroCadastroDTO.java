@@ -2,8 +2,6 @@ package com.murilo.library.entities.dto;
 
 import jakarta.validation.constraints.*;
 
-import java.util.List;
-
 public record LivroCadastroDTO(
         @NotBlank(message = "O título é obrigatório")
         @Size(min = 1, max = 255)
