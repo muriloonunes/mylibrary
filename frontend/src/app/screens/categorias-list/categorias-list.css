@@ -1,0 +1,78 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--p-content-border-color);
+}
+
+.header-content {
+  border-left: 4px solid var(--p-primary-color);
+  padding-left: 1rem;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--p-text-color);
+  letter-spacing: -0.5px;
+}
+
+::ng-deep .dialog-cadastro {
+  width: 40rem;
+}
+
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+
+.form-group.mb-large {
+  margin-bottom: 1.5rem;
+}
+
+
+.form-label {
+  font-weight: 600;
+  color: var(--p-text-color);
+}
+
+
+.error-message {
+  color: var(--p-red-500);
+  font-size: 0.875rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.error-message {
+  color: var(--p-red-500);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.error-message.server-error {
+  font-weight: 500;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
