@@ -1,6 +1,7 @@
 package com.murilo.library.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  *
@@ -14,6 +15,7 @@ public class Categoria {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(unique = true, nullable = false)
+    @NotBlank(message = "O nome não pode estar em branco")
     private String nome;
     private String descricao;
 
