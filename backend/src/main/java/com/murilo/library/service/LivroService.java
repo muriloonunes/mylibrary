@@ -5,6 +5,8 @@ import com.murilo.library.entities.Status;
 import com.murilo.library.entities.dto.LivroCadastroDTO;
 import com.murilo.library.repository.CategoriaRepository;
 import com.murilo.library.repository.LivroRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -55,13 +57,17 @@ public class LivroService {
         return livroRepository.findAll();
     }
 
+    public Page<Livro> listarLivros(Pageable pageable) {
+        return livroRepository.findAll(pageable);
+    }
+
     public Livro buscarPorId(Long id) {
         return livroRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Livro não encontrado")
         );
     }
 
-    public void removerLivro(Long id) {
+    public void deletar(Long id) {
         livroRepository.deleteById(id);
     }
 //
