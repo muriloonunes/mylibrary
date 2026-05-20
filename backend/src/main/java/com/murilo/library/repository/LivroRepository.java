@@ -28,4 +28,7 @@ public interface LivroRepository extends JpaRepository<Livro, Long> {
             @Param("categoriaId") Long categoriaId,
             @Param("status") Status status,
             Pageable pageable
-    );}
+    );
+
+    boolean existsByCategoriaId(Long categoriaId);
+}
