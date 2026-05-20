@@ -4,7 +4,7 @@
     <p class="page-subtitle">{{ livros.length }} livros no acervo</p>
   </div>
   <div class="header-actions">
-    <p-button label="Adicionar Livro" icon="pi pi-plus"></p-button>
+    <p-button label="Adicionar Livro" icon="pi pi-plus" (onClick)="abrirDialogo()"></p-button>
   </div>
 </div>
 
@@ -38,5 +38,79 @@
       </div>
     </div>
   }
-
 </div>
+
+<p-dialog header="Adicionar Livro" [modal]="true" [(visible)]="dialogoVisivel" (onHide)="fecharDialogo()"
+          styleClass="dialog-cadastro">
+  @if (livroCriado) {
+    <form #criarLivroForm="ngForm" (ngSubmit)="salvarLivro()" class="form-container">
+      <div class="form-group">
+        <label for="titulo" class="form-label">Título*</label>
+        <input type="text" id="titulo" name="titulo" pInputText [(ngModel)]="livroCriado.titulo"
+               required maxlength="255" #tituloVar="ngModel"
+               [ngClass]="{'ng-invalid ng-dirty': (tituloVar.invalid && (tituloVar.dirty || tituloVar.touched)) || erroBackend}">
+        @if (tituloVar.invalid && (tituloVar.dirty || tituloVar.touched)) {
+          <small class="error-message">O título é obrigatório.</small>
+        }
+      </div>
+
+      <div class="form-row-grid">
+        <div class="form-group">
+          <label for="autor" class="form-label">Autor*</label>
+          <input type="text" id="autor" name="autor" pInputText [(ngModel)]="livroCriado.autor"
+                 required minlength="2" maxlength="100" #autorVar="ngModel"
+                 [ngClass]="{'ng-invalid ng-dirty': (autorVar.invalid && (autorVar.dirty || autorVar.touched))}">
+          @if (autorVar.invalid && (autorVar.dirty || autorVar.touched)) {
+            <small class="error-message">O autor é obrigatório (mínimo 2 caracteres).</small>
+          }
+        </div>
+
+
+        <div class="form-group">
+          <label for="isbn" class="form-label">ISBN*</label>
+          <input type="text" id="isbn" name="isbn" pInputText [(ngModel)]="livroCriado.isbn"
+                 (input)="formatarISBN($event)" required pattern="^[0-9\-]{13,17}$" #isbnVar="ngModel"
+                 placeholder="Ex: 9788535902775"
+                 [ngClass]="{'ng-invalid ng-dirty': (isbnVar.invalid && (isbnVar.dirty || isbnVar.touched))}">
+          @if (isbnVar.invalid && (isbnVar.dirty || isbnVar.touched)) {
+            <small class="error-message">O ISBN deve conter apenas números com 10 ou 13 dígitos.</small>
+          }
+        </div>
+      </div>
+
+      <div class="form-row-grid">
+        <div class="form-group">
+          <label for="anoPublicacao" class="form-label">Ano de Publicação*</label>
+          <p-inputNumber id="anoPublicacao" name="anoPublicacao" [(ngModel)]="livroCriado.anoPublicacao"
+                         [useGrouping]="false" [max]="anoAtual" required #anoVar="ngModel"
+                         [ngClass]="{'ng-invalid ng-dirty': (anoVar.invalid && (anoVar.dirty || anoVar.touched))}">
+          </p-inputNumber>
+          @if (anoVar.invalid && (anoVar.dirty || anoVar.touched)) {
+            <small class="error-message">Ano obrigatório (não pode ser futuro).</small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="categoriaId" class="form-label">Categoria*</label>
+          <p-select id="categoriaId" name="categoriaId" [options]="categorias"
+                    [(ngModel)]="livroCriado.categoriaId" optionLabel="nome" optionValue="id"
+                    placeholder="Selecione" [required]="true" #catVar="ngModel"
+                    [ngClass]="{'ng-invalid ng-dirty': (catVar.invalid && (catVar.dirty || catVar.touched))}">
+          </p-select>
+          @if (catVar.invalid && (catVar.dirty || catVar.touched)) {
+            <small class="error-message">Selecione uma categoria.</small>
+          }
+        </div>
+      </div>
+
+      @if (erroBackend) {
+        <small class="error-message server-error">{{ erroBackend }}</small>
+      }
+
+      <div class="form-actions">
+        <p-button label="Cancelar" severity="secondary" type="button" (onClick)="fecharDialogo()"></p-button>
+        <p-button label="Salvar" type="submit" [disabled]="criarLivroForm.invalid"></p-button>
+      </div>
+    </form>
+  }
+</p-dialog>

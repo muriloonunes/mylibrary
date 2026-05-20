@@ -70,7 +70,24 @@ public class Livro {
     }
 
     public String getIsbnFormatado() {
-        return String.format("%s-%s-%s-%s-%s", isbn.substring(0, 3), isbn.charAt(3), isbn.substring(4, 9), isbn.substring(9, 12), isbn.substring(12));
+        String digits = isbn.replaceAll("\\D", "");
+
+        if (digits.length() == 13) {
+            return String.format("%s-%s-%s-%s-%s",
+                    digits.substring(0, 3),
+                    digits.charAt(3),
+                    digits.substring(4, 9),
+                    digits.substring(9, 12),
+                    digits.substring(12));
+        } else if (digits.length() == 10) {
+            return String.format("%s-%s-%s-%s",
+                    digits.charAt(0),
+                    digits.substring(1, 4),
+                    digits.substring(4, 9),
+                    digits.substring(9));
+        } else {
+            return isbn;
+        }
     }
 
     public void setIsbn(String isbn) {

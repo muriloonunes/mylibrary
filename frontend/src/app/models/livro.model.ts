@@ -9,3 +9,11 @@ export interface LivroModel {
   categoriaNome: string;
   status: Status;
 }
+
+export interface LivroCadastroModel {
+  titulo: string;
+  autor: string;
+  isbn: string;
+  anoPublicacao: number | null;
+  categoriaId: number | null;
+}

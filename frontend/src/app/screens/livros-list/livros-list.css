@@ -110,3 +110,24 @@
   width: 2.5rem;
   justify-content: center;
 }
+
+::ng-deep .dialog-cadastro {
+  width: 40rem;
+}
+
+.form-row-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.server-error {
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+::ng-deep .dialog-cadastro .p-select,
+::ng-deep .dialog-cadastro .p-inputnumber,
+::ng-deep .dialog-cadastro input {
+  width: 100% !important;
+}
