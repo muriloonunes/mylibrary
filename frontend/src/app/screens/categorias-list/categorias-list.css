@@ -43,6 +43,10 @@
   color: var(--p-text-muted-color);
 }
 
+.apagar-botao {
+  border-radius: 8px;
+}
+
 ::ng-deep .dialog-cadastro {
   width: 40rem;
 }

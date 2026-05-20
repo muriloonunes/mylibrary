@@ -35,9 +35,7 @@ public class CategoriaController {
     public ResponseEntity<List<CategoriaRespostaDTO>> listar() {
         var categorias = categoriaService.listarCategorias();
 
-        var dtos = categorias.stream().map(categoria -> new CategoriaRespostaDTO(
-                categoria.getId(), categoria.getNome(), categoria.getDescricao())
-        ).toList();
+        var dtos = categorias.stream().map(CategoriaRespostaDTO::new).toList();
         return ResponseEntity.ok(dtos);
     }
 

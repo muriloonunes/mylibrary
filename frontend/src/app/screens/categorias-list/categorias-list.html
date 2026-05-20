@@ -7,6 +7,8 @@
   </div>
 </div>
 
+<p-toast position="top-center"></p-toast>
+
 <div class="categorias-grid">
   @for (categoria of categorias; track categoria) {
     <p-card class="categoria-card">
@@ -17,8 +19,8 @@
             <p class="description">{{ categoria.descricao }}</p>
           }
         </div>
-        <p-button icon="pi pi-trash" severity="secondary" [text]="true" (onClick)="deletarCategoria(categoria.id)"
-                  [disabled]="false"/>
+        <p-button icon="pi pi-trash" [text]="true" (onClick)="deletarCategoria(categoria.id)"
+                  [disabled]="(categoria.quantidadeLivros ?? 0) > 0" class="p-button-danger p-button-text apagar-botao"/>
       </div>
     </p-card>
   }

@@ -4,8 +4,6 @@ import com.murilo.library.entities.Categoria;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 /**
  *
  * @author Murilo Nunes <murilo_no@outlook.com>
@@ -15,5 +13,5 @@ import java.util.Optional;
 
 @Repository
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
-    Optional<Categoria> findByNome(String nome);
+    boolean existsByNome(String nome);
 }
