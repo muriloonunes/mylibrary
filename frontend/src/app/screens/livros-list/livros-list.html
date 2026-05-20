@@ -29,11 +29,9 @@
       </div>
       <div class="livro-card-footer">
         <p-button label="Ver Detalhes" styleClass="p-button-outlined p-button-secondary w-full"></p-button>
-        <p-button
-          icon="pi pi-trash"
-          styleClass="p-button-danger p-button-text"
-          pTooltip="Excluir livro"
-          [disabled]="livro.status === 'EMPRESTADO'">
+        <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-text"
+                  pTooltip="Excluir livro" [disabled]="livro.status === 'EMPRESTADO'"
+                  (onClick)="deletarLivro(livro.id)">
         </p-button>
       </div>
     </div>
@@ -60,7 +58,7 @@
           <input type="text" id="autor" name="autor" pInputText [(ngModel)]="livroCriado.autor"
                  required minlength="2" maxlength="100" #autorVar="ngModel"
                  [ngClass]="{'ng-invalid ng-dirty': (autorVar.invalid && (autorVar.dirty || autorVar.touched))}">
-          @if (autorVar.invalid && (autorVar.dirty || autorVar.touched)) {
+          @if (autorVar.invalid && autorVar.touched) {
             <small class="error-message">O autor é obrigatório (mínimo 2 caracteres).</small>
           }
         </div>
@@ -70,9 +68,9 @@
           <label for="isbn" class="form-label">ISBN*</label>
           <input type="text" id="isbn" name="isbn" pInputText [(ngModel)]="livroCriado.isbn"
                  (input)="formatarISBN($event)" required pattern="^[0-9\-]{13,17}$" #isbnVar="ngModel"
-                 placeholder="Ex: 9788535902775"
+                 placeholder="978-8-53590-277-5" maxlength="17"
                  [ngClass]="{'ng-invalid ng-dirty': (isbnVar.invalid && (isbnVar.dirty || isbnVar.touched))}">
-          @if (isbnVar.invalid && (isbnVar.dirty || isbnVar.touched)) {
+          @if (isbnVar.invalid && isbnVar.touched) {
             <small class="error-message">O ISBN deve conter apenas números com 10 ou 13 dígitos.</small>
           }
         </div>
@@ -86,7 +84,7 @@
                          [ngClass]="{'ng-invalid ng-dirty': (anoVar.invalid && (anoVar.dirty || anoVar.touched))}">
           </p-inputNumber>
           @if (anoVar.invalid && (anoVar.dirty || anoVar.touched)) {
-            <small class="error-message">Ano obrigatório (não pode ser futuro).</small>
+            <small class="error-message">O ano é obrigatório</small>
           }
         </div>
 

@@ -1,7 +1,6 @@
 package com.murilo.library.service;
 
 import com.murilo.library.entities.Livro;
-import com.murilo.library.entities.Status;
 import com.murilo.library.entities.dto.LivroCadastroDTO;
 import com.murilo.library.repository.CategoriaRepository;
 import com.murilo.library.repository.LivroRepository;
@@ -43,12 +42,6 @@ public class LivroService {
                 livroDTO.anoPublicacao(),
                 categoria
         );
-        livro.setTitulo(livroDTO.titulo());
-        livro.setAutor(livroDTO.autor());
-        livro.setIsbn(livroDTO.isbn());
-        livro.setAnoPublicacao(livroDTO.anoPublicacao());
-        livro.setStatus(Status.DISPONIVEL);
-        livro.setCategoria(categoria);
         categoria.adicionarLivro(livro);
         return livroRepository.save(livro);
     }

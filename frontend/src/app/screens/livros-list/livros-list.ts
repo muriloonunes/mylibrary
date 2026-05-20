@@ -1,18 +1,18 @@
-import { ChangeDetectorRef, Component, inject, OnInit, ViewChild } from '@angular/core';
-import { Button } from 'primeng/button';
-import { LivroService } from '../../services/livro-service/livro-service';
-import { CategoriasService } from '../../services/categoria-service/categorias-service';
-import { CategoriaModel } from '../../models/CategoriaModel';
-import { LivroCadastroModel, LivroModel, Status } from '../../models/livro.model';
-import { Tag } from 'primeng/tag';
-import { Dialog } from 'primeng/dialog';
-import { Tooltip } from 'primeng/tooltip';
-import { FormsModule, NgForm } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
-import { NgClass } from '@angular/common';
-import { Select } from 'primeng/select';
-import { InputNumber } from 'primeng/inputnumber';
-import { InputText } from 'primeng/inputtext';
+import {ChangeDetectorRef, Component, inject, OnInit, ViewChild} from '@angular/core';
+import {Button} from 'primeng/button';
+import {LivroService} from '../../services/livro-service/livro-service';
+import {CategoriasService} from '../../services/categoria-service/categorias-service';
+import {CategoriaModel} from '../../models/CategoriaModel';
+import {LivroCadastroModel, LivroModel, Status} from '../../models/livro.model';
+import {Tag} from 'primeng/tag';
+import {Dialog} from 'primeng/dialog';
+import {Tooltip} from 'primeng/tooltip';
+import {FormsModule, NgForm} from '@angular/forms';
+import {HttpErrorResponse} from '@angular/common/http';
+import {NgClass} from '@angular/common';
+import {Select} from 'primeng/select';
+import {InputNumber} from 'primeng/inputnumber';
+import {InputText} from 'primeng/inputtext';
 
 @Component({
   selector: 'app-livros-list',
@@ -47,7 +47,7 @@ export class LivrosList implements OnInit {
     this.carregarCategorias();
   }
 
-  carregarLivros() {
+  private carregarLivros() {
     this.livroService.obterLivros(this.paginaAtual, 10).subscribe({
       next: (dados) => {
         this.livros = dados.content;
@@ -83,6 +83,17 @@ export class LivrosList implements OnInit {
         },
       });
     }
+  }
+
+  deletarLivro(livroId: number) {
+    this.livroService.apagarLivro(livroId).subscribe({
+      next: () => {
+        this.livros = this.livros.filter(l => l.id !== livroId);
+        this.cd.markForCheck();
+      }, error: (err) => {
+        console.log('Erro ao excluir o livro ', err)
+      }
+    })
   }
 
   private carregarCategorias() {
