@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import {LivroCadastroModel, LivroModel} from '../../models/livro.model';
 import {Page} from '../../models/page.model';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 
 
 @Injectable({
@@ -12,8 +12,16 @@ export class LivroService {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:8080/api/livros';
 
-  obterLivros(page: number, size: number): Observable<Page<LivroModel>> {
-    return this.http.get<Page<LivroModel>>(`${this.apiUrl}?page=${page}&size=${size}`);
+  obterLivros(page: number, size: number, busca?: string): Observable<Page<LivroModel>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size);
+
+    if (busca && busca.trim() !== '') {
+      params = params.set('busca', busca.trim());
+    }
+
+    return this.http.get<Page<LivroModel>>(this.apiUrl, { params });
   }
 
   criarLivro(livro: LivroCadastroModel): Observable<LivroModel> {

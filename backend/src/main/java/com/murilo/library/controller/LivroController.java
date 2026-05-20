@@ -34,8 +34,18 @@ public class LivroController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<LivroRespostaDTO>> listar(@PageableDefault(sort = "titulo") Pageable paginacao) {
-        Page<LivroRespostaDTO> livros = service.listarLivros(paginacao).map(LivroRespostaDTO::new);
+    public ResponseEntity<Page<LivroRespostaDTO>> listar(
+            @PageableDefault(sort = "titulo") Pageable paginacao,
+            @RequestParam(required = false) String busca
+    ) {
+        Page<LivroRespostaDTO> livros;
+
+        if (busca != null && !busca.trim().isEmpty()) {
+            livros = service.buscarLivros(paginacao, busca.trim()).map(LivroRespostaDTO::new);
+        } else {
+            livros = service.listarLivros(paginacao).map(LivroRespostaDTO::new);
+        }
+
         return ResponseEntity.ok(livros);
     }
 

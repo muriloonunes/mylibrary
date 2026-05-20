@@ -13,10 +13,13 @@ import {NgClass} from '@angular/common';
 import {Select} from 'primeng/select';
 import {InputNumber} from 'primeng/inputnumber';
 import {InputText} from 'primeng/inputtext';
+import {IconField} from 'primeng/iconfield';
+import {InputIcon} from 'primeng/inputicon';
+import {debounceTime, distinctUntilChanged, Subject, Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-livros-list',
-  imports: [Button, Tag, Tooltip, Dialog, FormsModule, NgClass, Select, InputNumber, InputText],
+  imports: [Button, Tag, Tooltip, Dialog, FormsModule, NgClass, Select, InputNumber, InputText, IconField, InputIcon],
   templateUrl: './livros-list.html',
   styleUrl: './livros-list.css',
 })
@@ -36,6 +39,9 @@ export class LivrosList implements OnInit {
   livroCriado: LivroCadastroModel | undefined = undefined;
   erroBackend: string | null = null;
   anoAtual = new Date().getFullYear();
+  filtroLivros: string = '';
+  buscaSubject = new Subject<string>();
+  buscaSubscription!: Subscription;
 
   readonly statusLabels: Record<Status, string> = {
     DISPONIVEL: 'Disponível',
@@ -45,10 +51,22 @@ export class LivrosList implements OnInit {
   ngOnInit(): void {
     this.carregarLivros();
     this.carregarCategorias();
+
+    this.buscaSubscription = this.buscaSubject.pipe(
+      debounceTime(200),
+      distinctUntilChanged()
+    ).subscribe(() => {
+      this.paginaAtual = 0;
+      this.carregarLivros();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.buscaSubscription.unsubscribe();
   }
 
   private carregarLivros() {
-    this.livroService.obterLivros(this.paginaAtual, 10).subscribe({
+    this.livroService.obterLivros(this.paginaAtual, 10, this.filtroLivros).subscribe({
       next: (dados) => {
         this.livros = dados.content;
         this.totalPaginas = dados.totalPages;
@@ -69,6 +87,7 @@ export class LivrosList implements OnInit {
       };
       this.livroService.criarLivro(dadosParaEnviar).subscribe({
         next: () => {
+          this.filtroLivros = '';
           this.carregarLivros();
           this.dialogoVisivel = false;
           this.cd.markForCheck();
@@ -106,6 +125,11 @@ export class LivrosList implements OnInit {
         console.error('Erro ao carregar categorias:', err);
       },
     });
+  }
+
+
+  protected filtrarLivros() {
+    this.buscaSubject.next(this.filtroLivros);
   }
 
   abrirDialogo() {

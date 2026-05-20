@@ -8,35 +8,54 @@
   </div>
 </div>
 
-<div class="livros-grid">
-  @for (livro of livros; track livro) {
-    <div class="livro-card">
-      <div class="livro-card-header">
-        <p-tag [value]="livro.categoriaNome" [icon]="'pi pi-tag'" class="categoria-livro-tag"></p-tag>
-        <p-tag [value]="statusLabels[livro.status]" [severity]="livro.status === 'DISPONIVEL' ? 'success': 'warn' "
-               class="status-livro-tag"></p-tag>
-      </div>
+@if (livros.length !== 0 || filtroLivros.trim() !== '') {
+  <div class="search-bar">
+    <p-iconfield>
+      <p-inputicon class="pi pi-search"></p-inputicon>
+      <input pInputText type="text" [(ngModel)]="filtroLivros" placeholder="Pesquisar por título ou autor"
+             class="search-input"
+             (input)="filtrarLivros()">
+    </p-iconfield>
+  </div>
+}
 
-      <div class="livro-card-body">
-        <div class="livro-card-image">
-          <i class="pi pi-book"></i>
+@if (livros.length === 0 && filtroLivros.trim() !== '' ) {
+  <div class="livros-empty-state">
+    <i class="pi pi-book livros-empty-icon"></i>
+    <p class="livros-empty-text">Nenhum livro encontrado para "<strong>{{ filtroLivros }}</strong>"</p>
+  </div>
+
+} @else {
+  <div class="livros-grid">
+    @for (livro of livros; track livro.id) {
+      <div class="livro-card">
+        <div class="livro-card-header">
+          <p-tag [value]="livro.categoriaNome" [icon]="'pi pi-tag'" class="categoria-livro-tag"></p-tag>
+          <p-tag [value]="statusLabels[livro.status]" [severity]="livro.status === 'DISPONIVEL' ? 'success': 'warn' "
+                 class="status-livro-tag"></p-tag>
         </div>
-        <div class="livro-card-content">
-          <h3 class="livro-titulo">{{ livro.titulo }}</h3>
-          <p class="livro-autor">{{ livro.autor }}</p>
-          <span class="meta">ISBN {{ livro.isbn }} &bull; {{ livro.anoPublicacao }}</span>
+
+        <div class="livro-card-body">
+          <div class="livro-card-image">
+            <i class="pi pi-book"></i>
+          </div>
+          <div class="livro-card-content">
+            <h3 class="livro-titulo">{{ livro.titulo }}</h3>
+            <p class="livro-autor">{{ livro.autor }}</p>
+            <span class="meta">ISBN {{ livro.isbn }} &bull; {{ livro.anoPublicacao }}</span>
+          </div>
+        </div>
+        <div class="livro-card-footer">
+          <p-button label="Ver Detalhes" styleClass="p-button-outlined p-button-secondary w-full"></p-button>
+          <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-text"
+                    pTooltip="Excluir livro" [disabled]="livro.status === 'EMPRESTADO'"
+                    (onClick)="deletarLivro(livro.id)">
+          </p-button>
         </div>
       </div>
-      <div class="livro-card-footer">
-        <p-button label="Ver Detalhes" styleClass="p-button-outlined p-button-secondary w-full"></p-button>
-        <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-text"
-                  pTooltip="Excluir livro" [disabled]="livro.status === 'EMPRESTADO'"
-                  (onClick)="deletarLivro(livro.id)">
-        </p-button>
-      </div>
-    </div>
-  }
-</div>
+    }
+  </div>
+}
 
 <p-dialog header="Adicionar Livro" [modal]="true" [(visible)]="dialogoVisivel" (onHide)="fecharDialogo()"
           styleClass="dialog-cadastro">
@@ -92,7 +111,7 @@
           <label for="categoriaId" class="form-label">Categoria*</label>
           <p-select id="categoriaId" name="categoriaId" [options]="categorias"
                     [(ngModel)]="livroCriado.categoriaId" optionLabel="nome" optionValue="id"
-                    placeholder="Selecione" [required]="true" #catVar="ngModel"
+                    placeholder="Selecione" [required]="true" #catVar="ngModel" appendTo="body"
                     [ngClass]="{'ng-invalid ng-dirty': (catVar.invalid && (catVar.dirty || catVar.touched))}">
           </p-select>
           @if (catVar.invalid && (catVar.dirty || catVar.touched)) {

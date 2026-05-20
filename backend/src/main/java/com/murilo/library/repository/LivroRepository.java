@@ -1,6 +1,8 @@
 package com.murilo.library.repository;
 
 import com.murilo.library.entities.Livro;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +15,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LivroRepository extends JpaRepository<Livro, Long> {
     boolean existsByIsbn(String isbn);
-}
+
+    Page<Livro> findByTituloContainingIgnoreCaseOrAutorContainingIgnoreCase(String titulo, String autor, Pageable pageable);}

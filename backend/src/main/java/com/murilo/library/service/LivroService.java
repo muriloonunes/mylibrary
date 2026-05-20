@@ -54,6 +54,10 @@ public class LivroService {
         return livroRepository.findAll(pageable);
     }
 
+    public Page<Livro> buscarLivros(Pageable pageable, String busca) {
+        return livroRepository.findByTituloContainingIgnoreCaseOrAutorContainingIgnoreCase(busca, busca, pageable);
+    }
+
     public Livro buscarPorId(Long id) {
         return livroRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Livro não encontrado")
