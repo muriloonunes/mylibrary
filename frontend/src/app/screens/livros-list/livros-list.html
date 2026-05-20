@@ -1,7 +1,7 @@
 <div class="page-header">
   <div class="header-content">
     <h1 class="page-title">Livros</h1>
-    <p class="page-subtitle">{{ livros.length }} livros no acervo</p>
+    <p class="page-subtitle">{{ totalElementos }} livros no acervo</p>
   </div>
   <div>
     <p-button label="Adicionar Livro" icon="pi pi-plus" (onClick)="abrirDialogo()"></p-button>
@@ -78,6 +78,16 @@
       </div>
     }
   </div>
+  @if (totalElementos > 10) {
+    <div class="pagination-container">
+      <p-paginator
+        [first]="paginaAtual * 10"
+        [rows]="10"
+        [totalRecords]="totalElementos"
+        (onPageChange)="mudarPagina($event)">
+      </p-paginator>
+    </div>
+  }
 }
 
 <p-dialog header="Adicionar Livro" [modal]="true" [(visible)]="dialogoVisivel" (onHide)="fecharDialogo()"

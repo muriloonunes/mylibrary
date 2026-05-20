@@ -16,10 +16,11 @@ import {InputText} from 'primeng/inputtext';
 import {IconField} from 'primeng/iconfield';
 import {InputIcon} from 'primeng/inputicon';
 import {debounceTime, Subject, Subscription} from 'rxjs';
+import {Paginator} from 'primeng/paginator';
 
 @Component({
   selector: 'app-livros-list',
-  imports: [Button, Tag, Tooltip, Dialog, FormsModule, NgClass, Select, InputNumber, InputText, IconField, InputIcon],
+  imports: [Button, Tag, Tooltip, Dialog, FormsModule, NgClass, Select, InputNumber, InputText, IconField, InputIcon, Paginator],
   templateUrl: './livros-list.html',
   styleUrl: './livros-list.css',
 })
@@ -34,6 +35,7 @@ export class LivrosList implements OnInit, OnDestroy {
   categorias: CategoriaModel[] = [];
   paginaAtual = 0;
   totalPaginas = 0;
+  totalElementos = 0;
 
   dialogoVisivel = false;
   livroCriado: LivroCadastroModel | undefined = undefined;
@@ -80,6 +82,7 @@ export class LivrosList implements OnInit, OnDestroy {
       next: (dados) => {
         this.livros = dados.content;
         this.totalPaginas = dados.totalPages;
+        this.totalElementos = dados.totalElements;
         this.cd.markForCheck();
       },
       error: (err) => console.error('Erro ao carregar livros:', err),
@@ -153,8 +156,8 @@ export class LivrosList implements OnInit, OnDestroy {
     this.erroBackend = null;
   }
 
-  mudarPagina(novaPagina: number) {
-    this.paginaAtual = novaPagina;
+  mudarPagina(event: any) {
+    this.paginaAtual = event.page;
     this.carregarLivros();
   }
 

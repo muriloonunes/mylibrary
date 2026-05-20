@@ -169,6 +169,24 @@
   justify-content: center;
 }
 
+.pagination-container {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+::ng-deep .pagination-container .p-paginator {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+::ng-deep .pagination-container .p-paginator-page {
+  transition: background-color 0.2s, color 0.2s;
+  border-radius: 8px;
+}
+
 ::ng-deep .dialog-cadastro {
   width: 40rem;
 }
