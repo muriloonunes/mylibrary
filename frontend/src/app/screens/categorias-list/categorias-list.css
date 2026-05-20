@@ -1,24 +1,3 @@
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--p-content-border-color);
-}
-
-.header-content {
-  border-left: 4px solid var(--p-primary-color);
-  padding-left: 1rem;
-}
-
-.page-title {
-  margin: 0;
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: var(--p-text-color);
-}
-
 .categorias-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -64,6 +43,10 @@
   color: var(--p-text-muted-color);
 }
 
+::ng-deep .dialog-cadastro {
+  width: 40rem;
+}
+
 /* Card Criar Específico */
 ::ng-deep .card-criar {
   border-style: dashed !important;
@@ -94,45 +77,4 @@
 
 ::ng-deep .card-criar:hover .criar-icon-wrapper {
   transform: scale(1.05);
-}
-
-/* Dialog e Form */
-::ng-deep .dialog-cadastro {
-  width: 40rem;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.form-label {
-  font-weight: 600;
-  color: var(--p-text-color);
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.error-message {
-  color: var(--p-red-500);
-  font-size: 0.85rem;
-  margin-top: 0.25rem;
-}
-
-/* Misc */
-::ng-deep .p-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
 }

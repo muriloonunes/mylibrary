@@ -1,6 +1,6 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NgClass} from '@angular/common';
-import {Router, RouterLink, RouterLinkActive} from '@angular/router';
+import {RouterLink, RouterLinkActive} from '@angular/router';
 import {Button} from 'primeng/button';
 
 @Component({
@@ -15,6 +15,13 @@ import {Button} from 'primeng/button';
   styleUrl: './sidebar.css',
 })
 export class Sidebar implements OnInit {
+  itensMenu = [
+    {label: 'Livros', icon: 'pi pi-book', rota: '/livros'},
+    {label: 'Categorias', icon: 'pi pi-tags', rota: '/categorias'},
+  ]
+  colapsada: boolean = false;
+  modoEscuro: boolean = false;
+
   ngOnInit(): void {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
@@ -23,15 +30,6 @@ export class Sidebar implements OnInit {
       document.documentElement.classList.add('app-dark');
     }
   }
-
-  private router = inject(Router)
-
-  colapsada: boolean = false;
-  modoEscuro: boolean = false;
-
-  itensMenu = [
-    {label: 'Categorias', icon: 'pi pi-tags', rota: '/categorias'},
-  ]
 
   toggleColapsada() {
     this.colapsada = !this.colapsada;
@@ -45,9 +43,5 @@ export class Sidebar implements OnInit {
     } else {
       document.documentElement.classList.remove('app-dark');
     }
-  }
-
-  navegarPara(rota: string) {
-    this.router.navigate([rota]);
   }
 }
