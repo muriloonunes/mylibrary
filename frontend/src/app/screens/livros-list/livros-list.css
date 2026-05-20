@@ -172,7 +172,7 @@
 .pagination-container {
   margin-top: 2.5rem;
   display: flex;
-  justify-content: center;
+  justify-content: right;
   width: 100%;
 }
 

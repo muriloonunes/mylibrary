@@ -8,6 +8,7 @@ import com.murilo.library.service.LivroService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class LivroController {
 
     @GetMapping
     public ResponseEntity<Page<LivroRespostaDTO>> listar(
-            @PageableDefault(sort = "titulo") Pageable paginacao,
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable paginacao,
             @RequestParam(required = false) String busca,
             @RequestParam(required = false) Long categoriaId,
             @RequestParam(required = false) Status status

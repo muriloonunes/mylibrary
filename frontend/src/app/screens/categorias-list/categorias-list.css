@@ -43,6 +43,10 @@
   color: var(--p-text-muted-color);
 }
 
+::ng-deep .dialog-cadastro {
+  width: 40rem;
+}
+
 /* Card Criar Específico */
 ::ng-deep .card-criar {
   border-style: dashed !important;

@@ -26,6 +26,7 @@ public class Livro {
     private String titulo;
     @NotBlank(message = "O autor não pode estar em branco")
     private String autor;
+    @Column(unique = true)
     @Pattern(regexp = "^([0-9]{10}|[0-9]{13})$", message = "O ISBN deve conter apenas números (10 ou 13 dígitos)")
     private String isbn;
     @PastOrPresent(message = "O ano de publicação não pode ser uma data futura")

@@ -1,26 +1,39 @@
-import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Button} from 'primeng/button';
-import {LivroService} from '../../services/livro-service/livro-service';
-import {CategoriasService} from '../../services/categoria-service/categorias-service';
-import {CategoriaModel} from '../../models/CategoriaModel';
-import {LivroCadastroModel, LivroModel, Status} from '../../models/livro.model';
-import {Tag} from 'primeng/tag';
-import {Dialog} from 'primeng/dialog';
-import {Tooltip} from 'primeng/tooltip';
-import {FormsModule, NgForm} from '@angular/forms';
-import {HttpErrorResponse} from '@angular/common/http';
-import {NgClass} from '@angular/common';
-import {Select} from 'primeng/select';
-import {InputNumber} from 'primeng/inputnumber';
-import {InputText} from 'primeng/inputtext';
-import {IconField} from 'primeng/iconfield';
-import {InputIcon} from 'primeng/inputicon';
-import {debounceTime, Subject, Subscription} from 'rxjs';
-import {Paginator} from 'primeng/paginator';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Button } from 'primeng/button';
+import { LivroService } from '../../services/livro-service/livro-service';
+import { CategoriasService } from '../../services/categoria-service/categorias-service';
+import { CategoriaModel } from '../../models/CategoriaModel';
+import { LivroCadastroModel, LivroModel, Status } from '../../models/livro.model';
+import { Tag } from 'primeng/tag';
+import { Dialog } from 'primeng/dialog';
+import { Tooltip } from 'primeng/tooltip';
+import { FormsModule, NgForm } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import { NgClass } from '@angular/common';
+import { Select } from 'primeng/select';
+import { InputNumber } from 'primeng/inputnumber';
+import { InputText } from 'primeng/inputtext';
+import { IconField } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
+import { debounceTime, Subject, Subscription } from 'rxjs';
+import { Paginator } from 'primeng/paginator';
 
 @Component({
   selector: 'app-livros-list',
-  imports: [Button, Tag, Tooltip, Dialog, FormsModule, NgClass, Select, InputNumber, InputText, IconField, InputIcon, Paginator],
+  imports: [
+    Button,
+    Tag,
+    Tooltip,
+    Dialog,
+    FormsModule,
+    NgClass,
+    Select,
+    InputNumber,
+    InputText,
+    IconField,
+    InputIcon,
+    Paginator,
+  ],
   templateUrl: './livros-list.html',
   styleUrl: './livros-list.css',
 })
@@ -53,19 +66,19 @@ export class LivrosList implements OnInit, OnDestroy {
     DISPONIVEL: 'Disponível',
     EMPRESTADO: 'Emprestado',
   };
-  opcoesStatus = Object.entries(this.statusLabels).map(([value, label]) => ({label, value}));
+  opcoesStatus = Object.entries(this.statusLabels).map(([value, label]) => ({ label, value }));
 
   get temFiltroAtivo(): boolean {
-    return this.filtroLivros.trim() !== '' || this.filtroCategoria !== null || this.filtroStatus !== null;
+    return (
+      this.filtroLivros.trim() !== '' || this.filtroCategoria !== null || this.filtroStatus !== null
+    );
   }
 
   ngOnInit(): void {
     this.carregarLivros();
     this.carregarCategorias();
 
-    this.buscaSubscription = this.buscaSubject.pipe(
-      debounceTime(300),
-    ).subscribe(() => {
+    this.buscaSubscription = this.buscaSubject.pipe(debounceTime(300)).subscribe(() => {
       this.paginaAtual = 0;
       this.carregarLivros();
     });
@@ -76,17 +89,17 @@ export class LivrosList implements OnInit, OnDestroy {
   }
 
   private carregarLivros() {
-    this.livroService.obterLivros(
-      this.paginaAtual, 10, this.filtroLivros, this.filtroCategoria, this.filtroStatus
-    ).subscribe({
-      next: (dados) => {
-        this.livros = dados.content;
-        this.totalPaginas = dados.totalPages;
-        this.totalElementos = dados.totalElements;
-        this.cd.markForCheck();
-      },
-      error: (err) => console.error('Erro ao carregar livros:', err),
-    });
+    this.livroService
+      .obterLivros(this.paginaAtual, 10, this.filtroLivros, this.filtroCategoria, this.filtroStatus)
+      .subscribe({
+        next: (dados) => {
+          this.livros = dados.content;
+          this.totalPaginas = dados.page.totalPages;
+          this.totalElementos = dados.page.totalElements;
+          this.cd.markForCheck();
+        },
+        error: (err) => console.error('Erro ao carregar livros:', err),
+      });
   }
 
   private carregarCategorias() {
@@ -115,9 +128,10 @@ export class LivrosList implements OnInit, OnDestroy {
         this.fecharDialogo();
       },
       error: (err: HttpErrorResponse) => {
-        this.erroBackend = err.status === 400 && err.error?.message
-          ? err.error.message
-          : 'Ocorreu um erro ao salvar o livro.';
+        this.erroBackend =
+          err.status === 400 && err.error?.message
+            ? err.error.message
+            : 'Ocorreu um erro ao salvar o livro.';
         this.cd.markForCheck();
       },
     });
@@ -126,10 +140,10 @@ export class LivrosList implements OnInit, OnDestroy {
   deletarLivro(livroId: number) {
     this.livroService.apagarLivro(livroId).subscribe({
       next: () => {
-        this.livros = this.livros.filter(l => l.id !== livroId);
+        this.livros = this.livros.filter((l) => l.id !== livroId);
         this.cd.markForCheck();
       },
-      error: (err) => console.error('Erro ao excluir o livro ', err)
+      error: (err) => console.error('Erro ao excluir o livro ', err),
     });
   }
 
@@ -168,17 +182,20 @@ export class LivrosList implements OnInit, OnDestroy {
     let valor = input.value.replace(/\D/g, '').substring(0, 13);
 
     if (valor.length <= 10) {
-      valor = valor.replace(/^(\d{1,3})?(\d{1,5})?(\d{1,4})?(\d)?$/,
-        (_, p1, p2, p3, p4) => [p1, p2, p3, p4].filter(Boolean).join('-'));
+      valor = valor.replace(/^(\d{1,3})?(\d{1,5})?(\d{1,4})?(\d)?$/, (_, p1, p2, p3, p4) =>
+        [p1, p2, p3, p4].filter(Boolean).join('-'),
+      );
     } else {
-      valor = valor.replace(/^(\d{1,3})?(\d{1})?(\d{1,5})?(\d{1,3})?(\d)?$/,
-        (_, p1, p2, p3, p4, p5) => [p1, p2, p3, p4, p5].filter(Boolean).join('-'));
+      valor = valor.replace(
+        /^(\d{1,3})?(\d{1})?(\d{1,5})?(\d{1,3})?(\d)?$/,
+        (_, p1, p2, p3, p4, p5) => [p1, p2, p3, p4, p5].filter(Boolean).join('-'),
+      );
     }
 
     this.livroCriado.isbn = valor;
   }
 
   private gerarLivroVazio(): LivroCadastroModel {
-    return {titulo: '', autor: '', isbn: '', anoPublicacao: null, categoriaId: null};
+    return { titulo: '', autor: '', isbn: '', anoPublicacao: null, categoriaId: null };
   }
 }
