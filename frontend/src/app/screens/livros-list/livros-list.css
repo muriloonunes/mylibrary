@@ -1,0 +1,112 @@
+.livros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.livro-card {
+  background: var(--p-content-background);
+  border: 1px solid var(--p-content-border-color);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.livro-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+::ng-deep .categoria-livro-tag .p-tag {
+  background-color: var(--p-content-hover-background);
+}
+
+::ng-deep .status-livro-tag .p-tag {
+  padding: 0.25rem 0.6rem;
+}
+
+.livro-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.livro-card-image {
+  width: 64px;
+  height: 80px;
+  background: var(--p-surface-ground);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.25rem;
+  border-left: 3px solid var(--p-primary-color);
+}
+
+.livro-card-image i {
+  font-size: 2.5rem;
+  color: var(--p-text-muted-color);
+}
+
+.livro-card-content {
+  margin-bottom: 1.5rem;
+  text-align: left;
+  width: 100%;
+}
+
+.livro-titulo {
+  font-size: 1.15rem;
+  color: var(--p-text-color);
+  margin: 0 0 0.25rem 0;
+  font-weight: 600;
+}
+
+.livro-autor {
+  font-size: 0.9rem;
+  color: var(--p-text-color);
+  opacity: 0.8;
+  margin: 0 0 0.75rem 0;
+}
+
+.meta {
+  font-size: 0.75rem;
+  color: var(--p-text-muted-color);
+  display: block;
+  letter-spacing: 0.3px;
+}
+
+.livro-card-footer {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.livro-card-footer ::ng-deep p-button:first-child {
+  flex-grow: 1;
+}
+
+.livro-card-footer ::ng-deep p-button:first-child .p-button {
+  width: 100%;
+  justify-content: center;
+  border-radius: 8px;
+
+}
+
+.livro-card-footer ::ng-deep p-button:last-child .p-button {
+  border-radius: 8px;
+  width: 2.5rem;
+  justify-content: center;
+}
