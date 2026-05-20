@@ -3,26 +3,49 @@
     <h1 class="page-title">Livros</h1>
     <p class="page-subtitle">{{ livros.length }} livros no acervo</p>
   </div>
-  <div class="header-actions">
+  <div>
     <p-button label="Adicionar Livro" icon="pi pi-plus" (onClick)="abrirDialogo()"></p-button>
   </div>
 </div>
 
-@if (livros.length !== 0 || filtroLivros.trim() !== '') {
-  <div class="search-bar">
-    <p-iconfield>
-      <p-inputicon class="pi pi-search"></p-inputicon>
-      <input pInputText type="text" [(ngModel)]="filtroLivros" placeholder="Pesquisar por título ou autor"
-             class="search-input"
-             (input)="filtrarLivros()">
-    </p-iconfield>
+@if (livros.length !== 0 || temFiltroAtivo) {
+  <div class="filters-container">
+    <div class="search-bar">
+      <p-iconfield>
+        <p-inputicon class="pi pi-search"></p-inputicon>
+        <input pInputText type="text" [(ngModel)]="filtroLivros" placeholder="Pesquisar por título ou autor"
+               class="search-input"
+               (input)="filtrarLivros()">
+      </p-iconfield>
+    </div>
+
+    <div class="filter-dropdowns">
+      <p-select [options]="categorias" [(ngModel)]="filtroCategoria"
+                optionLabel="nome" optionValue="id"
+                placeholder="Categoria" [showClear]="true"
+                (onChange)="filtrarLivros()"
+                class="filter-select">
+      </p-select>
+
+      <p-select [options]="opcoesStatus" [(ngModel)]="filtroStatus"
+                optionLabel="label" optionValue="value"
+                placeholder="Status" [showClear]="true"
+                (onChange)="filtrarLivros()"
+                class="filter-select">
+      </p-select>
+
+      @if (temFiltroAtivo) {
+        <p-button icon="pi pi-filter-slash" variant="text" severity="secondary"
+                  (onClick)="limparFiltros()" pTooltip="Limpar Filtros"></p-button>
+      }
+    </div>
   </div>
 }
 
-@if (livros.length === 0 && filtroLivros.trim() !== '' ) {
+@if (livros.length === 0 && temFiltroAtivo) {
   <div class="livros-empty-state">
     <i class="pi pi-book livros-empty-icon"></i>
-    <p class="livros-empty-text">Nenhum livro encontrado para "<strong>{{ filtroLivros }}</strong>"</p>
+    <p class="livros-empty-text">Nenhum livro encontrado para os filtros selecionados</p>
   </div>
 
 } @else {

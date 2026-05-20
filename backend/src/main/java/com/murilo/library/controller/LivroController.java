@@ -1,6 +1,7 @@
 package com.murilo.library.controller;
 
 import com.murilo.library.entities.Livro;
+import com.murilo.library.entities.Status;
 import com.murilo.library.entities.dto.LivroCadastroDTO;
 import com.murilo.library.entities.dto.LivroRespostaDTO;
 import com.murilo.library.service.LivroService;
@@ -36,16 +37,11 @@ public class LivroController {
     @GetMapping
     public ResponseEntity<Page<LivroRespostaDTO>> listar(
             @PageableDefault(sort = "titulo") Pageable paginacao,
-            @RequestParam(required = false) String busca
+            @RequestParam(required = false) String busca,
+            @RequestParam(required = false) Long categoriaId,
+            @RequestParam(required = false) Status status
     ) {
-        Page<LivroRespostaDTO> livros;
-
-        if (busca != null && !busca.trim().isEmpty()) {
-            livros = service.buscarLivros(paginacao, busca.trim()).map(LivroRespostaDTO::new);
-        } else {
-            livros = service.listarLivros(paginacao).map(LivroRespostaDTO::new);
-        }
-
+        Page<LivroRespostaDTO> livros = service.buscarLivros(paginacao, busca, categoriaId, status).map(LivroRespostaDTO::new);
         return ResponseEntity.ok(livros);
     }
 

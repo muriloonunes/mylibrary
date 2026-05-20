@@ -1,6 +1,7 @@
 package com.murilo.library.service;
 
 import com.murilo.library.entities.Livro;
+import com.murilo.library.entities.Status;
 import com.murilo.library.entities.dto.LivroCadastroDTO;
 import com.murilo.library.repository.CategoriaRepository;
 import com.murilo.library.repository.LivroRepository;
@@ -54,8 +55,8 @@ public class LivroService {
         return livroRepository.findAll(pageable);
     }
 
-    public Page<Livro> buscarLivros(Pageable pageable, String busca) {
-        return livroRepository.findByTituloContainingIgnoreCaseOrAutorContainingIgnoreCase(busca, busca, pageable);
+    public Page<Livro> buscarLivros(Pageable pageable, String busca, Long categoriaId, Status status) {
+        return livroRepository.buscarComFiltros(busca, categoriaId, status, pageable);
     }
 
     public Livro buscarPorId(Long id) {

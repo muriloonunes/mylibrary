@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, inject, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Button} from 'primeng/button';
 import {LivroService} from '../../services/livro-service/livro-service';
 import {CategoriasService} from '../../services/categoria-service/categorias-service';
@@ -15,7 +15,7 @@ import {InputNumber} from 'primeng/inputnumber';
 import {InputText} from 'primeng/inputtext';
 import {IconField} from 'primeng/iconfield';
 import {InputIcon} from 'primeng/inputicon';
-import {debounceTime, distinctUntilChanged, Subject, Subscription} from 'rxjs';
+import {debounceTime, Subject, Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-livros-list',
@@ -23,7 +23,7 @@ import {debounceTime, distinctUntilChanged, Subject, Subscription} from 'rxjs';
   templateUrl: './livros-list.html',
   styleUrl: './livros-list.css',
 })
-export class LivrosList implements OnInit {
+export class LivrosList implements OnInit, OnDestroy {
   private livroService = inject(LivroService);
   private categoriaService = inject(CategoriasService);
   private cd = inject(ChangeDetectorRef);
@@ -35,26 +35,34 @@ export class LivrosList implements OnInit {
   paginaAtual = 0;
   totalPaginas = 0;
 
-  dialogoVisivel: boolean = false;
+  dialogoVisivel = false;
   livroCriado: LivroCadastroModel | undefined = undefined;
   erroBackend: string | null = null;
   anoAtual = new Date().getFullYear();
-  filtroLivros: string = '';
-  buscaSubject = new Subject<string>();
-  buscaSubscription!: Subscription;
+
+  filtroLivros = '';
+  filtroCategoria: number | null = null;
+  filtroStatus: string | null = null;
+
+  private buscaSubject = new Subject<void>();
+  private buscaSubscription!: Subscription;
 
   readonly statusLabels: Record<Status, string> = {
     DISPONIVEL: 'Disponível',
     EMPRESTADO: 'Emprestado',
   };
+  opcoesStatus = Object.entries(this.statusLabels).map(([value, label]) => ({label, value}));
+
+  get temFiltroAtivo(): boolean {
+    return this.filtroLivros.trim() !== '' || this.filtroCategoria !== null || this.filtroStatus !== null;
+  }
 
   ngOnInit(): void {
     this.carregarLivros();
     this.carregarCategorias();
 
     this.buscaSubscription = this.buscaSubject.pipe(
-      debounceTime(200),
-      distinctUntilChanged()
+      debounceTime(300),
     ).subscribe(() => {
       this.paginaAtual = 0;
       this.carregarLivros();
@@ -66,53 +74,16 @@ export class LivrosList implements OnInit {
   }
 
   private carregarLivros() {
-    this.livroService.obterLivros(this.paginaAtual, 10, this.filtroLivros).subscribe({
+    this.livroService.obterLivros(
+      this.paginaAtual, 10, this.filtroLivros, this.filtroCategoria, this.filtroStatus
+    ).subscribe({
       next: (dados) => {
         this.livros = dados.content;
         this.totalPaginas = dados.totalPages;
         this.cd.markForCheck();
       },
-      error: (err) => {
-        console.error('Erro ao carregar categorias:', err);
-      },
+      error: (err) => console.error('Erro ao carregar livros:', err),
     });
-  }
-
-  salvarLivro() {
-    if (this.livroCriado && this.criarLivroForm?.valid) {
-      this.erroBackend = null;
-      const dadosParaEnviar = {
-        ...this.livroCriado,
-        isbn: this.livroCriado.isbn.replace(/\D/g, ''),
-      };
-      this.livroService.criarLivro(dadosParaEnviar).subscribe({
-        next: () => {
-          this.filtroLivros = '';
-          this.carregarLivros();
-          this.dialogoVisivel = false;
-          this.cd.markForCheck();
-        },
-        error: (err: HttpErrorResponse) => {
-          if (err.status === 400 && err.error?.message) {
-            this.erroBackend = err.error.message;
-          } else {
-            this.erroBackend = 'Ocorreu um erro ao salvar o livro.';
-          }
-          this.cd.markForCheck();
-        },
-      });
-    }
-  }
-
-  deletarLivro(livroId: number) {
-    this.livroService.apagarLivro(livroId).subscribe({
-      next: () => {
-        this.livros = this.livros.filter(l => l.id !== livroId);
-        this.cd.markForCheck();
-      }, error: (err) => {
-        console.log('Erro ao excluir o livro ', err)
-      }
-    })
   }
 
   private carregarCategorias() {
@@ -121,33 +92,63 @@ export class LivrosList implements OnInit {
         this.categorias = categorias;
         this.cd.markForCheck();
       },
-      error: (err) => {
-        console.error('Erro ao carregar categorias:', err);
+      error: (err) => console.error('Erro ao carregar categorias:', err),
+    });
+  }
+
+  salvarLivro() {
+    if (!this.livroCriado || !this.criarLivroForm?.valid) return;
+
+    this.erroBackend = null;
+    const dadosParaEnviar = {
+      ...this.livroCriado,
+      isbn: this.livroCriado.isbn.replace(/\D/g, ''),
+    };
+
+    this.livroService.criarLivro(dadosParaEnviar).subscribe({
+      next: () => {
+        this.limparFiltros();
+        this.carregarLivros();
+        this.fecharDialogo();
+      },
+      error: (err: HttpErrorResponse) => {
+        this.erroBackend = err.status === 400 && err.error?.message
+          ? err.error.message
+          : 'Ocorreu um erro ao salvar o livro.';
+        this.cd.markForCheck();
       },
     });
   }
 
+  deletarLivro(livroId: number) {
+    this.livroService.apagarLivro(livroId).subscribe({
+      next: () => {
+        this.livros = this.livros.filter(l => l.id !== livroId);
+        this.cd.markForCheck();
+      },
+      error: (err) => console.error('Erro ao excluir o livro ', err)
+    });
+  }
 
   protected filtrarLivros() {
-    this.buscaSubject.next(this.filtroLivros);
+    this.buscaSubject.next();
+  }
+
+  protected limparFiltros() {
+    this.filtroLivros = '';
+    this.filtroCategoria = null;
+    this.filtroStatus = null;
+    this.filtrarLivros();
   }
 
   abrirDialogo() {
+    this.livroCriado = this.gerarLivroVazio();
     this.dialogoVisivel = true;
-    this.livroCriado = {
-      titulo: '',
-      autor: '',
-      isbn: '',
-      anoPublicacao: null,
-      categoriaId: null,
-    };
   }
 
   fecharDialogo() {
     this.dialogoVisivel = false;
-    if (this.criarLivroForm) {
-      this.criarLivroForm.resetForm();
-    }
+    this.criarLivroForm?.resetForm();
     this.livroCriado = undefined;
     this.erroBackend = null;
   }
@@ -158,46 +159,23 @@ export class LivrosList implements OnInit {
   }
 
   formatarISBN(event: any) {
-    const input = event.target as HTMLInputElement;
-    let valor = (input?.value || '').replace(/\D/g, '');
+    if (!this.livroCriado) return;
 
-    if (valor.length > 13) {
-      valor = valor.substring(0, 13);
-    }
+    const input = event.target as HTMLInputElement;
+    let valor = input.value.replace(/\D/g, '').substring(0, 13);
 
     if (valor.length <= 10) {
-      valor = valor.replace(/^(\d{0,1})(\d{0,3})(\d{0,5})(\d{0,1}).*$/, (_, p1, p2, p3, p4) => {
-        let res = '';
-        if (p1) res += p1;
-        if (p2) res += '-' + p2;
-        if (p3) res += '-' + p3;
-        if (p4) res += '-' + p4;
-        return res;
-      });
+      valor = valor.replace(/^(\d{1,3})?(\d{1,5})?(\d{1,4})?(\d)?$/,
+        (_, p1, p2, p3, p4) => [p1, p2, p3, p4].filter(Boolean).join('-'));
     } else {
-      valor = valor.replace(
-        /^(\d{0,3})(\d{0,1})(\d{0,5})(\d{0,3})(\d{0,1}).*$/,
-        (_, p1, p2, p3, p4, p5) => {
-          let res = '';
-          if (p1) res += p1;
-          if (p2) res += '-' + p2;
-          if (p3) res += '-' + p3;
-          if (p4) res += '-' + p4;
-          if (p5) res += '-' + p5;
-          return res;
-        },
-      );
+      valor = valor.replace(/^(\d{1,3})?(\d{1})?(\d{1,5})?(\d{1,3})?(\d)?$/,
+        (_, p1, p2, p3, p4, p5) => [p1, p2, p3, p4, p5].filter(Boolean).join('-'));
     }
 
-    if (!this.livroCriado) {
-      this.livroCriado = {
-        titulo: '',
-        autor: '',
-        isbn: '',
-        anoPublicacao: null,
-        categoriaId: null,
-      };
-    }
     this.livroCriado.isbn = valor;
+  }
+
+  private gerarLivroVazio(): LivroCadastroModel {
+    return {titulo: '', autor: '', isbn: '', anoPublicacao: null, categoriaId: null};
   }
 }
