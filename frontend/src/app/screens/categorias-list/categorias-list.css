@@ -16,6 +16,12 @@
   height: 100%;
   border: 1px solid var(--p-content-border-color) !important;
   border-radius: 12px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+::ng-deep .categoria-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
 }
 
 .card-layout {
@@ -62,6 +68,8 @@
 ::ng-deep .card-criar:hover {
   border-color: var(--p-primary-color) !important;
   background: var(--p-content-hover-background) !important;
+  border-style: solid !important;
+  transform: translateY(-4px) scale(1.02);
 }
 
 .row-layout {
