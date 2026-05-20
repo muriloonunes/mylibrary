@@ -17,6 +17,8 @@ import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { debounceTime, Subject, Subscription } from 'rxjs';
 import { Paginator } from 'primeng/paginator';
+import { Toast } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-livros-list',
@@ -33,7 +35,9 @@ import { Paginator } from 'primeng/paginator';
     IconField,
     InputIcon,
     Paginator,
+    Toast,
   ],
+  providers: [MessageService],
   templateUrl: './livros-list.html',
   styleUrl: './livros-list.css',
 })
@@ -41,6 +45,7 @@ export class LivrosList implements OnInit, OnDestroy {
   private livroService = inject(LivroService);
   private categoriaService = inject(CategoriasService);
   private cd = inject(ChangeDetectorRef);
+  private messageService = inject(MessageService);
 
   @ViewChild('criarLivroForm') criarLivroForm!: NgForm;
 
@@ -98,7 +103,14 @@ export class LivrosList implements OnInit, OnDestroy {
           this.totalElementos = dados.page.totalElements;
           this.cd.markForCheck();
         },
-        error: (err) => console.error('Erro ao carregar livros:', err),
+        error: (err) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `Erro ao carregar livros: ${err.error}`,
+          });
+          console.error('Erro ao carregar livros:', err);
+        },
       });
   }
 
@@ -141,9 +153,21 @@ export class LivrosList implements OnInit, OnDestroy {
     this.livroService.apagarLivro(livroId).subscribe({
       next: () => {
         this.livros = this.livros.filter((l) => l.id !== livroId);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Deletado',
+          detail: 'Livro deletado com sucesso',
+        });
         this.cd.markForCheck();
       },
-      error: (err) => console.error('Erro ao excluir o livro ', err),
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: err.error.message,
+        });
+        console.error('Erro ao excluir o livro ', err);
+      },
     });
   }
 

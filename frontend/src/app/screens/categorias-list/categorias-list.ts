@@ -43,7 +43,7 @@ export class CategoriasList implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: `Erro ao carregar categorias: ${err}`,
+          detail: `Erro ao carregar categorias: ${err.error}`,
         });
         console.error('Erro ao carregar categorias:', err);
       },

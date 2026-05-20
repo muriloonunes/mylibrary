@@ -66,6 +66,12 @@ public class LivroService {
     }
 
     public void deletar(Long id) {
+        if (!livroRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Livro não encontrado");
+        }
+        if (livroRepository.existsByIdAndStatus(id, Status.EMPRESTADO)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é possível deletar um livro emprestado");
+        }
         livroRepository.deleteById(id);
     }
 //
