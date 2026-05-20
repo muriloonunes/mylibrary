@@ -1,7 +1,7 @@
 package com.murilo.library.service;
 
 import com.murilo.library.entities.Categoria;
-import com.murilo.library.entities.dto.CategoriaDTO;
+import com.murilo.library.entities.dto.CategoriaCadastroDTO;
 import com.murilo.library.repository.CategoriaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,13 +24,13 @@ public class CategoriaService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    public Categoria criarCategoria(CategoriaDTO categoriaDTO) {
-        if (encontrarPorNome(categoriaDTO.nome()) != null) {
+    public Categoria criarCategoria(CategoriaCadastroDTO categoriaCadastroDTO) {
+        if (encontrarPorNome(categoriaCadastroDTO.nome()) != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já existe uma categoria com este nome.");
         }
         Categoria categoria = new Categoria();
-        categoria.setNome(categoriaDTO.nome());
-        categoria.setDescricao(categoriaDTO.descricao());
+        categoria.setNome(categoriaCadastroDTO.nome());
+        categoria.setDescricao(categoriaCadastroDTO.descricao());
         return categoriaRepository.save(categoria);
     }
 

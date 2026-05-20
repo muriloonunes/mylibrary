@@ -2,7 +2,7 @@ package com.murilo.library.entities.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record CategoriaDTO(
+public record CategoriaCadastroDTO(
         @NotBlank(message = "O nome não pode estar em branco")
         String nome,
         String descricao

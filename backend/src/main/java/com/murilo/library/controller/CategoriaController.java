@@ -1,7 +1,8 @@
 package com.murilo.library.controller;
 
 import com.murilo.library.entities.Categoria;
-import com.murilo.library.entities.dto.CategoriaDTO;
+import com.murilo.library.entities.dto.CategoriaCadastroDTO;
+import com.murilo.library.entities.dto.CategoriaRespostaDTO;
 import com.murilo.library.service.CategoriaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -26,15 +27,17 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<Categoria> criarCategoria(@Valid @RequestBody CategoriaDTO categoriaDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.criarCategoria(categoriaDTO));
+    public ResponseEntity<Categoria> criarCategoria(@Valid @RequestBody CategoriaCadastroDTO categoriaCadastroDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.criarCategoria(categoriaCadastroDTO));
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoriaDTO>> listar() {
+    public ResponseEntity<List<CategoriaRespostaDTO>> listar() {
         var categorias = categoriaService.listarCategorias();
 
-        var dtos = categorias.stream().map(categoria -> new CategoriaDTO(categoria.getNome(), categoria.getDescricao())).toList();
+        var dtos = categorias.stream().map(categoria -> new CategoriaRespostaDTO(
+                categoria.getId(), categoria.getNome(), categoria.getDescricao())
+        ).toList();
         return ResponseEntity.ok(dtos);
     }
 
