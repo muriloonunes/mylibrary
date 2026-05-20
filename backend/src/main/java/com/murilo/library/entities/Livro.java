@@ -1,10 +1,13 @@
 package com.murilo.library.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+
+import java.time.Year;
 
 /**
  *
@@ -26,17 +29,18 @@ public class Livro {
     @Pattern(regexp = "^([0-9]{10}|[0-9]{13})$", message = "O ISBN deve conter apenas números (10 ou 13 dígitos)")
     private String isbn;
     @PastOrPresent(message = "O ano de publicação não pode ser uma data futura")
-    private Integer anoPublicacao;
+    private Year anoPublicacao;
     @Enumerated(EnumType.STRING)
     private Status status;
     @ManyToOne
     @JoinColumn(name = "categoria_id")
+    @JsonManagedReference
     private Categoria categoria;
 
     public Livro() {
     }
 
-    public Livro(String titulo, String autor, String isbn, Integer anoPublicacao, Categoria categoria) {
+    public Livro(String titulo, String autor, String isbn, Year anoPublicacao, Categoria categoria) {
         this.titulo = titulo;
         this.autor = autor;
         this.isbn = isbn;
@@ -94,11 +98,11 @@ public class Livro {
         this.isbn = isbn;
     }
 
-    public Integer getAnoPublicacao() {
+    public Year getAnoPublicacao() {
         return anoPublicacao;
     }
 
-    public void setAnoPublicacao(Integer anoPublicacao) {
+    public void setAnoPublicacao(Year anoPublicacao) {
         this.anoPublicacao = anoPublicacao;
     }
 

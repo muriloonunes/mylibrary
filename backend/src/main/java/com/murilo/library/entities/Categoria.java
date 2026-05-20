@@ -1,5 +1,6 @@
 package com.murilo.library.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -24,6 +25,7 @@ public class Categoria {
     private String descricao;
 
     @OneToMany(mappedBy = "categoria")
+    @JsonBackReference
     private List<Livro> livros;
 
     public Long getId() {

@@ -2,6 +2,8 @@ package com.murilo.library.entities.dto;
 
 import jakarta.validation.constraints.*;
 
+import java.time.Year;
+
 public record LivroCadastroDTO(
         @NotBlank(message = "O título é obrigatório")
         @Size(min = 1, max = 255)
@@ -17,7 +19,7 @@ public record LivroCadastroDTO(
 
         @NotNull(message = "O ano de publicação é obrigatório.")
         @PastOrPresent(message = "O ano de publicação não pode ser futuro")
-        Integer anoPublicacao,
+        Year anoPublicacao,
 
         @NotNull(message = "A categoria é obrigatória")
         Long categoriaId
