@@ -31,8 +31,11 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Categoria>> listar() {
-        return ResponseEntity.ok(categoriaService.listarCategorias());
+    public ResponseEntity<List<CategoriaDTO>> listar() {
+        var categorias = categoriaService.listarCategorias();
+
+        var dtos = categorias.stream().map(categoria -> new CategoriaDTO(categoria.getNome(), categoria.getDescricao())).toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}")

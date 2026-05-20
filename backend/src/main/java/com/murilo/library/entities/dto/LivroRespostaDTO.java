@@ -1,6 +1,7 @@
 package com.murilo.library.entities.dto;
 
 import com.murilo.library.entities.Livro;
+import com.murilo.library.entities.Status;
 
 public record LivroRespostaDTO(
         Long id,
@@ -8,7 +9,7 @@ public record LivroRespostaDTO(
         String autor,
         String isbn,
         String categoriaNome,
-        String status,
+        Status status,
         String anoPublicacao
 ) {
     public LivroRespostaDTO(Livro livro) {
@@ -18,7 +19,7 @@ public record LivroRespostaDTO(
                 livro.getAutor(),
                 livro.getIsbnFormatado(),
                 livro.getCategoria().getNome(),
-                livro.getStatus().toString(),
+                livro.getStatus(),
                 livro.getAnoPublicacao().toString()
         );
     }

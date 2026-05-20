@@ -27,6 +27,7 @@ public class Livro {
     private String isbn;
     @PastOrPresent(message = "O ano de publicação não pode ser uma data futura")
     private Integer anoPublicacao;
+    @Enumerated(EnumType.STRING)
     private Status status;
     @ManyToOne
     @JoinColumn(name = "categoria_id")
