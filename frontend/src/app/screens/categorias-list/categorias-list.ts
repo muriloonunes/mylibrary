@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { Button } from 'primeng/button';
 import { CategoriasService } from '../../services/categoria-service/categorias-service';
-import { CategoriaModel } from '../../models/CategoriaModel';
+import { CategoriaModel } from '../../models/categoria.model';
 import { Dialog } from 'primeng/dialog';
 import { FormsModule, NgForm } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';

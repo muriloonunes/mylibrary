@@ -45,11 +45,15 @@
 }
 
 @if (livros.length === 0 && temFiltroAtivo) {
-  <div class="livros-empty-state">
-    <i class="pi pi-book livros-empty-icon"></i>
-    <p class="livros-empty-text">Nenhum livro encontrado para os filtros selecionados</p>
+  <div class="empty-state">
+    <i class="pi pi-book empty-icon"></i>
+    <p class="empty-text">Nenhum livro encontrado para os filtros selecionados</p>
   </div>
-
+} @else if (livros.length === 0 && !temFiltroAtivo) {
+  <div class="empty-state">
+    <i class="pi pi-book empty-icon"></i>
+    <p class="empty-text">Nenhum livro cadastrado</p>
+  </div>
 } @else {
   <div class="livros-grid">
     @for (livro of livros; track livro.id) {

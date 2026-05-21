@@ -1,7 +1,5 @@
 :host {
   display: block;
-  background-color: var(--p-surface-ground);
-  color: var(--p-text-color);
 }
 
 .app-layout {

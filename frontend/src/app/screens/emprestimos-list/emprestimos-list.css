@@ -1,0 +1,30 @@
+.tabs-container {
+  margin-bottom: 1.5rem;
+}
+
+.tab-list {
+  background-color: transparent;
+}
+
+.tab-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+::ng-deep .p-badge {
+  border-radius: 50%;
+}
+
+.table-container {
+  background: var(--p-content-background);
+  border: 1px solid var(--p-content-border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+::ng-deep .p-datatable .p-datatable-header,
+::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  border-bottom: 1px solid var(--p-content-border-color);
+}

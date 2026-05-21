@@ -1,0 +1,19 @@
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Page } from '../../models/page.model';
+import { EmprestimoExibicaoModel } from '../../models/emprestimo.model';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class EmprestimoService {
+  private http = inject(HttpClient);
+  private apiUrl = 'http://localhost:8080/api/emprestimos';
+
+  obterEmprestimos(page: number, size: number): Observable<Page<EmprestimoExibicaoModel>> {
+    let params = new HttpParams().set('page', page).set('size', size);
+
+    return this.http.get<Page<EmprestimoExibicaoModel>>(this.apiUrl, { params });
+  }
+}
