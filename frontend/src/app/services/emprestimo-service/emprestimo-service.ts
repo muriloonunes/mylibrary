@@ -1,8 +1,8 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Page } from '../../models/page.model';
-import { EmprestimoExibicaoModel } from '../../models/emprestimo.model';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {Page} from '../../models/page.model';
+import {EmprestimoCadastroModel, EmprestimoExibicaoModel} from '../../models/emprestimo.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +14,10 @@ export class EmprestimoService {
   obterEmprestimos(page: number, size: number): Observable<Page<EmprestimoExibicaoModel>> {
     let params = new HttpParams().set('page', page).set('size', size);
 
-    return this.http.get<Page<EmprestimoExibicaoModel>>(this.apiUrl, { params });
+    return this.http.get<Page<EmprestimoExibicaoModel>>(this.apiUrl, {params});
+  }
+
+  criarEmprestimo(emprestimo: EmprestimoCadastroModel): Observable<EmprestimoExibicaoModel> {
+    return this.http.post<EmprestimoExibicaoModel>(this.apiUrl, emprestimo);
   }
 }

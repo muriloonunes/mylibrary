@@ -42,13 +42,13 @@
         <div class="form-group">
           <label for="pessoaNome" class="form-label">Nome da Pessoa*</label>
           <input type="text" id="pessoaNome" name="pessoaNome" pInputText
-                 [(ngModel)]="novoEmprestimo.pessoaNome"
+                 [(ngModel)]="novoEmprestimo.nomePessoa"
                  required minlength="3" maxlength="100"
                  #pessoaVar="ngModel"
                  placeholder="Digite o nome completo"
                  [ngClass]="{'ng-invalid ng-dirty': (pessoaVar.invalid && (pessoaVar.dirty || pessoaVar.touched))}">
           @if (pessoaVar.invalid && pessoaVar.touched) {
-            @if (novoEmprestimo.pessoaNome.length < 3) {
+            @if (novoEmprestimo.nomePessoa.length < 3) {
               <small class="error-message">O nome precisa ter pelo menos 3 caracteres</small>
             } @else {
               <small class="error-message">O nome é obrigatório</small>

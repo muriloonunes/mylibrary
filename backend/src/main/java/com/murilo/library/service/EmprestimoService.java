@@ -34,14 +34,14 @@ public class EmprestimoService {
         if (livroRepository.existsByIdAndStatus(dto.livroId(), Status.EMPRESTADO)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Esse livro já está emprestado.");
         }
-        if (dto.dataDevolucaoPrevista().isBefore(dto.dataEmprestimo())) {
+        if (dto.dataPrevista().isBefore(dto.dataEmprestimo())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A data de devolução prevista não pode ser antes da data do empréstimo.");
         }
         var emprestimo = new Emprestimo(
                 dto.nomePessoa(),
                 dto.telefone(),
                 dto.dataEmprestimo(),
-                dto.dataDevolucaoPrevista(),
+                dto.dataPrevista(),
                 livro
         );
         livro.setStatus(Status.EMPRESTADO);

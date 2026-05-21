@@ -2,7 +2,7 @@ export type StatusEmprestimo = 'ATIVO' | 'ATRASADO' | 'DEVOLVIDO';
 
 export interface EmprestimoCadastroModel {
   livroId: number | null;
-  pessoaNome: string;
+  nomePessoa: string;
   telefone: string;
   dataEmprestimo: Date;
   dataPrevista: Date | null;

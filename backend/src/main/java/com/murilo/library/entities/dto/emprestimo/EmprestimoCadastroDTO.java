@@ -14,8 +14,8 @@ public record EmprestimoCadastroDTO(
 
         @NotBlank(message = "O telefone é obrigatório.")
         @Pattern(
-                regexp = "^55\\s?\\(?\\d{2}\\)?\\s?9?\\d{4}-?\\d{4}$",
-                message = "O telefone deve começar com 55 e seguir o padrão +55 (XX) 9XXXX-XXXX"
+                regexp = "\\(?\\d{2}\\)?\\s?9?\\d{4}-?\\d{4}$",
+                message = "O telefone deve seguir o padrão (XX) 9XXXX-XXXX"
         )
         String telefone,
 
@@ -25,6 +25,6 @@ public record EmprestimoCadastroDTO(
 
         @NotNull(message = "A data de devolução prevista é obrigatória.")
         @FutureOrPresent(message = "A data de devolução prevista deve ser hoje ou uma data futura.")
-        LocalDate dataDevolucaoPrevista
+        LocalDate dataPrevista
 ) {
 }

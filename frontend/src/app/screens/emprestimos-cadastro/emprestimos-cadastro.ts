@@ -48,7 +48,7 @@ export class EmprestimosCadastro implements OnInit {
   dataAtual = new Date();
   novoEmprestimo: EmprestimoCadastroModel = {
     livroId: null,
-    pessoaNome: '',
+    nomePessoa: '',
     telefone: '',
     dataEmprestimo: this.dataAtual,
     dataPrevista: null,
@@ -71,6 +71,7 @@ export class EmprestimosCadastro implements OnInit {
     };
 
     console.log(dadosParaEnviar);
+    this.emprestimoService.criarEmprestimo(dadosParaEnviar).subscribe({})
   }
 
   protected carregarLivros() {
