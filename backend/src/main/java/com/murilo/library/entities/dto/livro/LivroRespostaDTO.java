@@ -1,4 +1,4 @@
-package com.murilo.library.entities.dto;
+package com.murilo.library.entities.dto.livro;
 
 import com.murilo.library.entities.Livro;
 import com.murilo.library.entities.Status;

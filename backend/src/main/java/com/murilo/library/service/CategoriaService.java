@@ -1,7 +1,7 @@
 package com.murilo.library.service;
 
 import com.murilo.library.entities.Categoria;
-import com.murilo.library.entities.dto.CategoriaCadastroDTO;
+import com.murilo.library.entities.dto.categoria.CategoriaCadastroDTO;
 import com.murilo.library.repository.CategoriaRepository;
 import com.murilo.library.repository.LivroRepository;
 import org.springframework.http.HttpStatus;

@@ -2,8 +2,8 @@ package com.murilo.library.controller;
 
 import com.murilo.library.entities.Livro;
 import com.murilo.library.entities.Status;
-import com.murilo.library.entities.dto.LivroCadastroDTO;
-import com.murilo.library.entities.dto.LivroRespostaDTO;
+import com.murilo.library.entities.dto.livro.LivroCadastroDTO;
+import com.murilo.library.entities.dto.livro.LivroRespostaDTO;
 import com.murilo.library.service.LivroService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
