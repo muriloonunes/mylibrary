@@ -59,6 +59,12 @@ public class LivroService {
         return livroRepository.buscarComFiltros(busca, categoriaId, status, pageable);
     }
 
+    public List<Livro> buscarLivrosDisponiveis() {
+        return livroRepository.findByStatus(Status.DISPONIVEL).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não há livros disponíveis")
+        );
+    }
+
     public Livro buscarPorId(Long id) {
         return livroRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Livro não encontrado")

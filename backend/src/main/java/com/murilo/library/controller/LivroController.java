@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  *
  * @author Murilo Nunes <murilo_no@outlook.com>
@@ -44,6 +46,11 @@ public class LivroController {
     ) {
         Page<LivroRespostaDTO> livros = service.buscarLivros(paginacao, busca, categoriaId, status).map(LivroRespostaDTO::new);
         return ResponseEntity.ok(livros);
+    }
+
+    @GetMapping("/disponiveis")
+    public ResponseEntity<List<LivroRespostaDTO>> listarDisponiveis() {
+        return ResponseEntity.ok(service.buscarLivrosDisponiveis().stream().map(LivroRespostaDTO::new).toList());
     }
 
     @GetMapping("/{id}")

@@ -4,12 +4,11 @@
     <p class="page-subtitle">{{ countTodos }} empréstimos &bull; {{ countAtrasados }} atrasados</p>
   </div>
   <div>
-    <p-button label="Novo Empréstimo" icon="pi pi-plus"></p-button>
+    <p-button label="Novo Empréstimo" icon="pi pi-plus" (onClick)="novoEmprestimo()"></p-button>
   </div>
 </div>
 
 <p-toast position="top-center"></p-toast>
-
 
 @if (emprestimos.length === 0) {
   <div class="empty-state">

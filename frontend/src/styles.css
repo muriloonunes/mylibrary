@@ -57,6 +57,12 @@ html, body {
   margin-bottom: 1rem;
 }
 
+.form-row-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
 .form-label {
   font-weight: 600;
   color: var(--p-text-color);
@@ -73,6 +79,11 @@ html, body {
   color: var(--p-red-500);
   font-size: 0.85rem;
   margin-top: 0.25rem;
+}
+
+.server-error {
+  margin-bottom: 1rem;
+  font-weight: 500;
 }
 
 .empty-state {

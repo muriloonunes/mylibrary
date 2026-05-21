@@ -8,6 +8,7 @@ import { Badge } from 'primeng/badge';
 import { TableModule } from 'primeng/table';
 import { DatePipe } from '@angular/common';
 import { Tag } from 'primeng/tag';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-emprestimos-list',
@@ -17,6 +18,7 @@ import { Tag } from 'primeng/tag';
   styleUrl: './emprestimos-list.css',
 })
 export class EmprestimosList implements OnInit {
+  private router = inject(Router);
   private messageService = inject(MessageService);
   private cd = inject(ChangeDetectorRef);
 
@@ -151,5 +153,9 @@ export class EmprestimosList implements OnInit {
       default:
         return 'secondary';
     }
+  }
+
+  protected novoEmprestimo() {
+    this.router.navigate(['/emprestimos/novo']);
   }
 }

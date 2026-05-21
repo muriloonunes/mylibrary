@@ -1,0 +1,115 @@
+<div class="page-header">
+  <div class="header-content">
+    <h1 class="page-title">Registrar Empréstimo</h1>
+  </div>
+  <div>
+    <p-button label="Voltar" icon="pi pi-arrow-left" severity="secondary" variant="text"></p-button>
+  </div>
+</div>
+
+<p-toast position="top-center"></p-toast>
+
+<div class="form-card-container">
+  <div class="form-page-card">
+    <form #cadastroForm="ngForm" (ngSubmit)="salvarEmprestimo()" class="form-container">
+      <div class="form-group">
+        <label for="livroId" class="form-label">Livro*</label>
+        <p-auto-complete id="livroId" name="livroId"
+                         [(ngModel)]="novoEmprestimo.livroId"
+                         [suggestions]="livrosFiltrados"
+                         (completeMethod)="filtrarLivros($event)"
+                         [dropdown]="true" [required]="true" [virtualScroll]="true"
+                         [virtualScrollItemSize]="50"
+                         optionLabel="titulo" optionValue="id"
+                         placeholder="Selecione um livro disponível"
+                         #livroVar="ngModel" appendTo="body"
+                         pTooltip="Digite para pesquisar"
+                         [ngClass]="{'ng-invalid ng-dirty': (livroVar.invalid && (livroVar.dirty || livroVar.touched))}">
+          <ng-template let-livro pTemplate="item">
+            <div>
+              <strong>{{ livro.titulo }}</strong>
+              <small style="display: block; color: var(--p-text-muted-color);">{{ livro.autor }}
+                &bull; {{ livro.isbn }} </small>
+            </div>
+          </ng-template>
+        </p-auto-complete>
+        @if (livroVar.invalid && (livroVar.dirty || livroVar.touched)) {
+          <small class="error-message">Selecione um livro</small>
+        }
+      </div>
+
+      <div class="form-row-grid">
+        <div class="form-group">
+          <label for="pessoaNome" class="form-label">Nome da Pessoa*</label>
+          <input type="text" id="pessoaNome" name="pessoaNome" pInputText
+                 [(ngModel)]="novoEmprestimo.pessoaNome"
+                 required minlength="3" maxlength="100"
+                 #pessoaVar="ngModel"
+                 placeholder="Digite o nome completo"
+                 [ngClass]="{'ng-invalid ng-dirty': (pessoaVar.invalid && (pessoaVar.dirty || pessoaVar.touched))}">
+          @if (pessoaVar.invalid && pessoaVar.touched) {
+            @if (novoEmprestimo.pessoaNome.length < 3) {
+              <small class="error-message">O nome precisa ter pelo menos 3 caracteres</small>
+            } @else {
+              <small class="error-message">O nome é obrigatório</small>
+            }
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="telefone" class="form-label">Telefone de Contato*</label>
+          <p-inputmask id="telefone" name="telefone"
+                       mask="(99) 99999-9999"
+                       [(ngModel)]="novoEmprestimo.telefone"
+                       placeholder="(XX) 9XXXX-XXXX"
+                       [required]="true"
+                       #telVar="ngModel"
+                       [ngClass]="{'ng-invalid ng-dirty': (telVar.invalid && (telVar.dirty || telVar.touched))}">
+          </p-inputmask>
+          @if (telVar.invalid && telVar.touched) {
+            <small class="error-message">O telefone de contato é obrigatório.</small>
+          }
+        </div>
+      </div>
+      <div class="form-row-grid">
+        <div class="form-group">
+          <label for="dataEmprestimo" class="form-label">Data de Empréstimo*</label>
+          <p-date-picker id="dataEmprestimo" name="dataEmprestimo"
+                         [(ngModel)]="novoEmprestimo.dataEmprestimo"
+                         [showIcon]="true"
+                         dateFormat="dd/mm/yy" pInputMask="99/99/9999"
+                         [maxDate]="dataAtual"
+                         [required]="true"
+                         #dataEmpVar="ngModel"
+                         [ngClass]="{'ng-invalid ng-dirty': (dataEmpVar.invalid && (dataEmpVar.dirty || dataEmpVar.touched))}">
+          </p-date-picker>
+          @if (dataEmpVar.invalid && dataEmpVar.touched) {
+            <small class="error-message">A data de empréstimo é obrigatória.</small>
+          }
+        </div>
+        <div class="form-group">
+          <label for="dataPrevista" class="form-label">Devolução Prevista*</label>
+          <p-date-picker id="dataPrevista" name="dataPrevista"
+                         [(ngModel)]="novoEmprestimo.dataPrevista"
+                         [showIcon]="true"
+                         dateFormat="dd/mm/yy" pInputMask="99/99/9999"
+                         [minDate]="novoEmprestimo.dataEmprestimo || dataAtual"
+                         [required]="true"
+                         #dataPrevVar="ngModel"
+                         [ngClass]="{'ng-invalid ng-dirty': (dataPrevVar.invalid && (dataPrevVar.dirty || dataPrevVar.touched))}">
+          </p-date-picker>
+          @if (dataPrevVar.invalid && dataPrevVar.touched) {
+            <small class="error-message">A data de devolução prevista é obrigatória.</small>
+          }
+        </div>
+      </div>
+      @if (erroBackend) {
+        <small class="error-message server-error">{{ erroBackend }}</small>
+      }
+      <div class="form-actions">
+        <p-button label="Cancelar" severity="secondary" type="button"></p-button>
+        <p-button label="Confirmar Empréstimo" type="submit" [disabled]="cadastroForm.invalid"></p-button>
+      </div>
+    </form>
+  </div>
+</div>
