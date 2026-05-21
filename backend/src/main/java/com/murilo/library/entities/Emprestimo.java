@@ -22,8 +22,8 @@ public class Emprestimo {
     @Size(min = 3, max = 255, message = "O nome da pessoa deve conter entre 3 e 255 caracteres")
     private String nomePessoa;
     @Pattern(
-            regexp = "^55\\s?\\(?\\d{2}\\)?\\s?9?\\d{4}-?\\d{4}$",
-            message = "O telefone deve começar com +55 e seguir o padrão +55 (XX) 9XXXX-XXXX"
+            regexp = "^\\d{2}9\\d{8}$",
+            message = "O telefone deve seguir o padrão (XX) 9XXXX-XXXX"
     )
     private String telefone;
     @NotNull(message = "A data do empréstimo é obrigatória.")
@@ -72,7 +72,7 @@ public class Emprestimo {
     }
 
     public String getTelefoneFormatado() {
-        return this.telefone.replaceAll("(\\d{2})(\\d{2})(\\d{1})(\\d{4})(\\d{4})", "+$1 ($2) $3$4-$5");
+        return this.telefone.replaceAll("(\\d{2})(\\d)(\\d{4})(\\d{4})", "($1) $2$3-$4");
     }
 
     public void setTelefone(String telefone) {

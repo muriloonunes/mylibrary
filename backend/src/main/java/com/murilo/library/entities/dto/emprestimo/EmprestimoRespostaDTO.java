@@ -10,18 +10,30 @@ public record EmprestimoRespostaDTO(
         String pessoaNome,
         String telefone,
         LocalDate dataEmprestimo,
-        LocalDate dataPrevisa,
-        LocalDate dataDevolucao
+        LocalDate dataPrevista,
+        LocalDate dataDevolucao,
+        String status
 ) {
     public EmprestimoRespostaDTO(Emprestimo emprestimo) {
         this(
                 emprestimo.getId(),
                 emprestimo.getLivro().getTitulo(),
                 emprestimo.getNomePessoa(),
-                emprestimo.getTelefone(),
+                emprestimo.getTelefoneFormatado(),
                 emprestimo.getDataEmprestimo(),
                 emprestimo.getDataDevolucaoPrevista(),
-                emprestimo.getDataDevolucaoEfetiva()
+                emprestimo.getDataDevolucaoEfetiva(),
+                calcularStatus(emprestimo)
         );
+    }
+
+    private static String calcularStatus(Emprestimo emprestimo) {
+        if (emprestimo.getDataDevolucaoEfetiva() != null) {
+            return "DEVOLVIDO";
+        }
+        if (emprestimo.getDataDevolucaoPrevista().isBefore(LocalDate.now())) {
+            return "ATRASADO";
+        }
+        return "ATIVO";
     }
 }

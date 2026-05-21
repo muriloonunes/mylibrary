@@ -5,10 +5,11 @@ import { Tab, TabList, Tabs } from 'primeng/tabs';
 import { MessageService } from 'primeng/api';
 import { EmprestimoExibicaoModel, StatusEmprestimo } from '../../models/emprestimo.model';
 import { Badge } from 'primeng/badge';
-import { TableModule } from 'primeng/table';
+import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { DatePipe } from '@angular/common';
 import { Tag } from 'primeng/tag';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
+import { EmprestimoService } from '../../services/emprestimo-service/emprestimo-service';
 
 @Component({
   selector: 'app-emprestimos-list',
@@ -19,96 +20,75 @@ import {Router} from '@angular/router';
 })
 export class EmprestimosList implements OnInit {
   private router = inject(Router);
+  private emprestimoService = inject(EmprestimoService);
   private messageService = inject(MessageService);
   private cd = inject(ChangeDetectorRef);
 
   emprestimos: EmprestimoExibicaoModel[] = [];
-
   abaAtiva: string = 'todos';
 
-  ngOnInit(): void {
+  paginaAtual = 0;
+  tamanhoPagina = 10;
+  totalElementos = 0;
+  estaCarregando = true;
+  carregamentoInicialConcluido = true;
+
+  totalEmprestimos = 0;
+  totalAtivos = 0;
+  totalAtrasados = 0;
+
+  ngOnInit() {
+    this.carregarResumo();
     this.carregarEmprestimos();
   }
 
-  carregarEmprestimos() {
-    const hoje = new Date();
-    const ontem = new Date(hoje);
-    ontem.setDate(ontem.getDate() - 1);
-    const amanha = new Date(hoje);
-    amanha.setDate(amanha.getDate() + 3);
-    const semanaPassada = new Date(hoje);
-    semanaPassada.setDate(semanaPassada.getDate() - 7);
-    const mesPassado = new Date(hoje);
-    mesPassado.setDate(mesPassado.getDate() - 20);
+  carregarTabela(event: TableLazyLoadEvent) {
+    if (!this.carregamentoInicialConcluido) return;
 
-    this.emprestimos = [
-      {
-        id: 1,
-        livroTitulo: 'O Senhor dos Anéis',
-        pessoaNome: 'João Silva',
-        telefone: '(11) 99999-1111',
-        dataEmprestimo: semanaPassada,
-        dataPrevista: ontem,
-      }, // Atrasado
-      {
-        id: 2,
-        livroTitulo: '1984',
-        pessoaNome: 'Maria Souza',
-        telefone: '(11) 98888-2222',
-        dataEmprestimo: semanaPassada,
-        dataPrevista: amanha,
-      }, // Ativo
-      {
-        id: 3,
-        livroTitulo: 'Dom Quixote',
-        pessoaNome: 'Carlos Oliveira',
-        telefone: '(11) 97777-3333',
-        dataEmprestimo: mesPassado,
-        dataPrevista: semanaPassada,
-        dataDevolucao: hoje,
-      }, // Devolvido
-      {
-        id: 4,
-        livroTitulo: 'Clean Code',
-        pessoaNome: 'Ana Costa',
-        telefone: '(21) 96666-4444',
-        dataEmprestimo: hoje,
-        dataPrevista: amanha,
-      }, // Ativo
-      {
-        id: 5,
-        livroTitulo: 'A Revolução dos Bichos',
-        pessoaNome: 'Pedro Santos',
-        telefone: '(31) 95555-5555',
-        dataEmprestimo: mesPassado,
-        dataPrevista: ontem,
-      }, // Atrasado
-      {
-        id: 6,
-        livroTitulo: 'Design Patterns',
-        pessoaNome: 'Lucas Almeida',
-        telefone: '(41) 94444-6666',
-        dataEmprestimo: hoje,
-        dataPrevista: amanha,
-      }, // Ativo
-    ];
+    this.estaCarregando = true;
+    const first = event.first ?? 0;
+    const rows = event.rows ?? this.tamanhoPagina;
+    this.paginaAtual = Math.floor(first / rows);
+    this.tamanhoPagina = rows;
+
+    this.carregarEmprestimos();
   }
 
-  calcularStatus(emprestimo: EmprestimoExibicaoModel): StatusEmprestimo {
-    if (emprestimo.dataDevolucao) {
-      return 'DEVOLVIDO';
+  protected aoAlterarAba(novaAba: string | undefined | number) {
+    if (typeof novaAba === 'string') {
+      this.paginaAtual = 0;
+      this.carregarEmprestimos();
     }
+  }
 
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
+  private carregarEmprestimos() {
+    this.estaCarregando = true;
+    const statusFiltro = this.abaAtiva === 'TODOS' ? null : this.abaAtiva;
 
-    const prevista = new Date(emprestimo.dataPrevista);
-    prevista.setHours(0, 0, 0, 0);
+    this.emprestimoService
+      .obterEmprestimos(this.paginaAtual, this.tamanhoPagina, statusFiltro)
+      .subscribe({
+        next: (dados) => {
+          this.emprestimos = dados.content;
+          this.totalElementos = dados.page.totalElements;
 
-    if (prevista < hoje) {
-      return 'ATRASADO';
-    }
-    return 'ATIVO';
+          this.estaCarregando = false;
+          this.carregamentoInicialConcluido = true;
+
+          this.cd.markForCheck();
+        },
+        error: (err) => {
+          this.estaCarregando = false;
+          this.carregamentoInicialConcluido = true;
+
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `Erro ao carregar empréstimos: ${err.name}`,
+          });
+          console.error('Erro ao carregar empréstimos:', err);
+        },
+      });
   }
 
   devolver(emprestimo: EmprestimoExibicaoModel) {
@@ -121,25 +101,16 @@ export class EmprestimosList implements OnInit {
     this.cd.markForCheck();
   }
 
-  get emprestimosFiltrados(): EmprestimoExibicaoModel[] {
-    if (this.abaAtiva === 'abertos') {
-      return this.emprestimos.filter((e) => this.calcularStatus(e) === 'ATIVO');
-    } else if (this.abaAtiva === 'atrasados') {
-      return this.emprestimos.filter((e) => this.calcularStatus(e) === 'ATRASADO');
-    }
-    return this.emprestimos;
-  }
-
-  get countTodos(): number {
-    return this.emprestimos.length;
-  }
-
-  get countAbertos(): number {
-    return this.emprestimos.filter((e) => this.calcularStatus(e) === 'ATIVO').length;
-  }
-
-  get countAtrasados(): number {
-    return this.emprestimos.filter((e) => this.calcularStatus(e) === 'ATRASADO').length;
+  private carregarResumo() {
+    this.emprestimoService.obterResumo().subscribe({
+      next: (resumo) => {
+        this.totalEmprestimos = resumo.todos;
+        this.totalAtivos = resumo.ativos;
+        this.totalAtrasados = resumo.atrasados;
+        this.cd.markForCheck();
+      },
+      error: (err) => console.error('Erro ao carregar resumo', err),
+    });
   }
 
   getSeverityTag(status: StatusEmprestimo): 'success' | 'warn' | 'danger' | 'info' | 'secondary' {

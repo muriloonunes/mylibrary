@@ -6,9 +6,13 @@ import com.murilo.library.entities.dto.emprestimo.EmprestimoCadastroDTO;
 import com.murilo.library.repository.EmprestimoRepository;
 import com.murilo.library.repository.LivroRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDate;
 
 /**
  *
@@ -47,5 +51,37 @@ public class EmprestimoService {
         livro.setStatus(Status.EMPRESTADO);
         livro.adicionarEmprestimo(emprestimo);
         return emprestimoRepository.save(emprestimo);
+    }
+
+    public Page<Emprestimo> listar(Pageable pageable) {
+        return emprestimoRepository.findAll(pageable);
+    }
+
+    public Page<Emprestimo> listarDevolvidos(Pageable pageable) {
+        return emprestimoRepository.findByDataDevolucaoEfetivaIsNotNull(pageable);
+    }
+
+    public Page<Emprestimo> listarAtrasados(Pageable pageable) {
+        var hoje = LocalDate.now();
+        return emprestimoRepository.findAtrasados(hoje, pageable);
+    }
+
+    public Page<Emprestimo> listarAbertos(Pageable pageable) {
+        var hoje = LocalDate.now();
+        return emprestimoRepository.findAbertos(hoje, pageable);
+    }
+
+    public long contar() {
+        return emprestimoRepository.count();
+    }
+
+    public long contarAtrasados() {
+        var hoje = LocalDate.now();
+        return emprestimoRepository.contarAtrasados(hoje);
+    }
+
+    public long contarAbertos() {
+        var hoje = LocalDate.now();
+        return emprestimoRepository.contarAbertos(hoje);
     }
 }

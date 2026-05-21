@@ -1,7 +1,7 @@
 <div class="page-header">
   <div class="header-content">
-    <h1 class="page-title">Livros</h1>
-    <p class="page-subtitle">{{ countTodos }} empréstimos &bull; {{ countAtrasados }} atrasados</p>
+    <h1 class="page-title">Empréstimos</h1>
+    <p class="page-subtitle">{{ totalEmprestimos }} empréstimos &bull; {{ totalAtrasados }} atrasados</p>
   </div>
   <div>
     <p-button label="Novo Empréstimo" icon="pi pi-plus" (onClick)="novoEmprestimo()"></p-button>
@@ -10,78 +10,82 @@
 
 <p-toast position="top-center"></p-toast>
 
-@if (emprestimos.length === 0) {
-  <div class="empty-state">
-    <i class="pi pi-folder-open empty-icon"></i>
-    <p class="empty-text">Nenhum empréstimo encontrado</p>
-  </div>
-} @else {
-  <div class="tabs-container">
-    <p-tabs [(value)]="abaAtiva">
-      <p-tablist class="tab-list">
-        <p-tab [value]="'todos'">
-          <div class="tab-label">
-            <span>Todos</span>
-            <p-badge [value]="countTodos" severity="secondary"></p-badge>
-          </div>
-        </p-tab>
-        <p-tab [value]="'abertos'">
-          <div class="tab-label">
-            <span>Ativos</span>
-            <p-badge [value]="countAbertos" severity="info"></p-badge>
-          </div>
-        </p-tab>
-        <p-tab [value]="'atrasados'">
-          <div class="tab-label">
-            <span>Atrasados</span>
-            <p-badge [value]="countAtrasados" severity="danger"></p-badge>
-          </div>
-        </p-tab>
-      </p-tablist>
-    </p-tabs>
-  </div>
-
-  <div class="table-container">
-    <p-table [value]="emprestimosFiltrados" [paginator]="true" [rows]="10" class="p-datatable-striped">
-      <ng-template #header>
-        <tr>
-          <th>Livro</th>
-          <th>Pessoa</th>
-          <th>Telefone</th>
-          <th>Data Empréstimo</th>
-          <th>Data Prevista</th>
-          <th>Status</th>
-          <th></th>
-        </tr>
-      </ng-template>
-      <ng-template #body let-emprestimo>
-        <tr>
-          <td><strong>{{ emprestimo.livroTitulo }}</strong></td>
-          <td>{{ emprestimo.pessoaNome }}</td>
-          <td>{{ emprestimo.telefone }}</td>
-          <td>{{ emprestimo.dataEmprestimo | date:'dd/MM/yyyy' }}</td>
-          <td>{{ emprestimo.dataPrevista | date:'dd/MM/yyyy' }}</td>
-          <td>
-            <p-tag [value]="calcularStatus(emprestimo)" [severity]="getSeverityTag(calcularStatus(emprestimo))"></p-tag>
-          </td>
-          <td style="text-align: center;">
-            <p-button icon="pi pi-check" label="Devolver" severity="success"
-                      styleClass="p-button-sm p-button-outlined" (onClick)="devolver(emprestimo.id)"
-                      [disabled]="calcularStatus(emprestimo) === 'DEVOLVIDO'">
-            </p-button>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template #emptymessage>
-        <tr>
-          <td colspan="7">
-            <div class="empty-state">
-              <i class="pi pi-folder-open empty-icon"></i>
-              <p class="empty-text">Nenhum empréstimo encontrado nessa categoria</p>
+@if (carregamentoInicialConcluido) {
+  @if (totalEmprestimos === 0) {
+    <div class="empty-state">
+      <i class="pi pi-folder-open empty-icon"></i>
+      <p class="empty-text">Nenhum empréstimo encontrado</p>
+    </div>
+  } @else {
+    <div class="tabs-container">
+      <p-tabs [(value)]="abaAtiva" (valueChange)="aoAlterarAba($event)">
+        <p-tablist class="tab-list">
+          <p-tab [value]="'todos'">
+            <div class="tab-label">
+              <span>Todos</span>
+              <p-badge [value]="emprestimos.length" severity="secondary"></p-badge>
             </div>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
+          </p-tab>
+          <p-tab [value]="'abertos'">
+            <div class="tab-label">
+              <span>Ativos</span>
+              <p-badge [value]="totalAtivos" severity="info"></p-badge>
+            </div>
+          </p-tab>
+          <p-tab [value]="'atrasados'">
+            <div class="tab-label">
+              <span>Atrasados</span>
+              <p-badge [value]="totalAtrasados" severity="danger"></p-badge>
+            </div>
+          </p-tab>
+        </p-tablist>
+      </p-tabs>
+    </div>
+
+    <div class="table-container">
+      <p-table [value]="emprestimos" [paginator]="true" [rows]="10"
+               [lazy]="true" (onLazyLoad)="carregarTabela($event)" [totalRecords]="totalElementos"
+               [loading]="estaCarregando" stripedRows>
+        <ng-template #header>
+          <tr>
+            <th>Livro</th>
+            <th>Pessoa</th>
+            <th>Telefone</th>
+            <th>Data Empréstimo</th>
+            <th>Data Prevista</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-emprestimo>
+          <tr>
+            <td><strong>{{ emprestimo.livroTitulo }}</strong></td>
+            <td>{{ emprestimo.pessoaNome }}</td>
+            <td>{{ emprestimo.telefone }}</td>
+            <td>{{ emprestimo.dataEmprestimo | date:'dd/MM/yyyy' }}</td>
+            <td>{{ emprestimo.dataPrevista | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <p-tag [value]="emprestimo.status" [severity]="getSeverityTag(emprestimo.status)"></p-tag>
+            </td>
+            <td style="text-align: center;">
+              <p-button icon="pi pi-check" label="Devolver" severity="success"
+                        styleClass="p-button-sm p-button-outlined" (onClick)="devolver(emprestimo.id)"
+                        [disabled]="emprestimo.status === 'DEVOLVIDO'">
+              </p-button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="7">
+              <div class="empty-state">
+                <i class="pi pi-folder-open empty-icon"></i>
+                <p class="empty-text">Nenhum empréstimo encontrado nessa categoria</p>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  }
 }

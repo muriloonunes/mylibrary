@@ -14,7 +14,7 @@ public record EmprestimoCadastroDTO(
 
         @NotBlank(message = "O telefone é obrigatório.")
         @Pattern(
-                regexp = "\\(?\\d{2}\\)?\\s?9?\\d{4}-?\\d{4}$",
+                regexp = "^\\d{2}9\\d{8}$",
                 message = "O telefone deve seguir o padrão (XX) 9XXXX-XXXX"
         )
         String telefone,

@@ -52,7 +52,6 @@ export class LivrosList implements OnInit, OnDestroy {
   livros: LivroModel[] = [];
   categorias: CategoriaModel[] = [];
   paginaAtual = 0;
-  totalPaginas = 0;
   totalElementos = 0;
 
   dialogoVisivel = false;
@@ -99,7 +98,6 @@ export class LivrosList implements OnInit, OnDestroy {
       .subscribe({
         next: (dados) => {
           this.livros = dados.content;
-          this.totalPaginas = dados.page.totalPages;
           this.totalElementos = dados.page.totalElements;
           this.cd.markForCheck();
         },

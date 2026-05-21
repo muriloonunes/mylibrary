@@ -16,4 +16,5 @@ export interface EmprestimoExibicaoModel {
   dataEmprestimo: Date;
   dataPrevista: Date;
   dataDevolucao?: Date;
+  status?: StatusEmprestimo;
 }
