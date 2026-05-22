@@ -34,6 +34,12 @@ public class EmprestimoController {
         return ResponseEntity.ok(resposta);
     }
 
+    @PostMapping("/{id}/devolver")
+    public ResponseEntity<EmprestimoRespostaDTO> devolver(@PathVariable Long id) {
+        EmprestimoRespostaDTO resposta = new EmprestimoRespostaDTO(emprestimoService.devolver(id));
+        return ResponseEntity.ok(resposta);
+    }
+
     @GetMapping
     public ResponseEntity<Page<EmprestimoRespostaDTO>> listar(
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable paginacao,

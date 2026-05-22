@@ -35,6 +35,10 @@ export class EmprestimoService {
     return this.http.post<EmprestimoExibicaoModel>(this.apiUrl, emprestimo);
   }
 
+  devolver(id: number): Observable<EmprestimoExibicaoModel> {
+    return this.http.post<EmprestimoExibicaoModel>(`${this.apiUrl}/${id}/devolver`, {});
+  }
+
   obterResumo(): Observable<{ todos: number; ativos: number; atrasados: number }> {
     return this.http.get<{ todos: number; ativos: number; atrasados: number }>(
       `${this.apiUrl}/resumo`,

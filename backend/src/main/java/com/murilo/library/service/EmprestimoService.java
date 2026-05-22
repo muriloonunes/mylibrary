@@ -53,6 +53,25 @@ public class EmprestimoService {
         return emprestimoRepository.save(emprestimo);
     }
 
+    @Transactional
+    public Emprestimo devolver(Long id) {
+        var emprestimoExistente = encontrarPorId(id);
+
+        if (emprestimoExistente.getDataDevolucaoEfetiva() != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Esse empréstimo já foi devolvido.");
+        }
+
+        emprestimoExistente.setDataDevolucaoEfetiva(LocalDate.now());
+        emprestimoExistente.getLivro().setStatus(Status.DISPONIVEL);
+        return emprestimoRepository.save(emprestimoExistente);
+    }
+
+    public Emprestimo encontrarPorId(Long id) {
+        return emprestimoRepository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empréstimo não encontrado")
+        );
+    }
+
     public Page<Emprestimo> listar(Pageable pageable) {
         return emprestimoRepository.findAll(pageable);
     }

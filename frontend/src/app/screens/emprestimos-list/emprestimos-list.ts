@@ -93,13 +93,39 @@ export class EmprestimosList implements OnInit {
   }
 
   devolver(emprestimo: EmprestimoExibicaoModel) {
-    emprestimo.dataDevolucao = new Date();
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Devolvido',
-      detail: `O livro "${emprestimo.livroTitulo}" foi devolvido com sucesso.`,
+    this.emprestimoService.devolver(emprestimo.id).subscribe({
+      next: (dados) => {
+        const index = this.emprestimos.findIndex((e) => e.id === dados.id);
+        if (index !== -1) {
+          this.emprestimos[index] = dados;
+        }
+        this.carregarResumo();
+
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Devolvido',
+          detail: `O livro "${emprestimo.livroTitulo}" foi devolvido com sucesso.`,
+        });
+
+        this.cd.markForCheck();
+      },
+      error: (err) => {
+        console.log('Erro ao devolver: ', err);
+        if (err.status === 400 || err.status === 404) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `Erro ao devolver: ${err.error.message}`,
+          });
+        } else {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `Erro ao devolver: ${err.name}`,
+          });
+        }
+      },
     });
-    this.cd.markForCheck();
   }
 
   private carregarResumo() {
@@ -118,6 +144,8 @@ export class EmprestimosList implements OnInit {
     switch (status) {
       case 'ATIVO':
         return 'info';
+      case 'VENCE HOJE':
+        return 'warn';
       case 'ATRASADO':
         return 'danger';
       case 'DEVOLVIDO':
