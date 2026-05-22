@@ -1,8 +1,8 @@
 package com.murilo.library.controller;
 
 import com.murilo.library.entities.Categoria;
-import com.murilo.library.entities.dto.CategoriaCadastroDTO;
-import com.murilo.library.entities.dto.CategoriaRespostaDTO;
+import com.murilo.library.entities.dto.categoria.CategoriaCadastroDTO;
+import com.murilo.library.entities.dto.categoria.CategoriaRespostaDTO;
 import com.murilo.library.service.CategoriaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

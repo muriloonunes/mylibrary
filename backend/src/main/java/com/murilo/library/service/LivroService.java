@@ -2,7 +2,7 @@ package com.murilo.library.service;
 
 import com.murilo.library.entities.Livro;
 import com.murilo.library.entities.Status;
-import com.murilo.library.entities.dto.LivroCadastroDTO;
+import com.murilo.library.entities.dto.livro.LivroCadastroDTO;
 import com.murilo.library.repository.CategoriaRepository;
 import com.murilo.library.repository.LivroRepository;
 import org.springframework.data.domain.Page;
@@ -59,6 +59,12 @@ public class LivroService {
         return livroRepository.buscarComFiltros(busca, categoriaId, status, pageable);
     }
 
+    public List<Livro> buscarLivrosDisponiveis() {
+        return livroRepository.findByStatus(Status.DISPONIVEL).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não há livros disponíveis")
+        );
+    }
+
     public Livro buscarPorId(Long id) {
         return livroRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Livro não encontrado")
@@ -74,22 +80,4 @@ public class LivroService {
         }
         livroRepository.deleteById(id);
     }
-//
-//    public boolean marcarComoIndisponivel(int id) {
-//        Livro livro = livroRepository.buscarPorId(id);
-//        if (livro == null || !livro.isStatusDisponivel()) {
-//            return false;
-//        }
-//        livro.setStatusDisponivel(false);
-//        return livroRepository.atualizar(livro);
-//    }
-//
-//    public boolean marcarComoDisponivel(int id) {
-//        Livro livro = livroRepository.buscarPorId(id);
-//        if (livro == null || livro.isStatusDisponivel()) {
-//            return false;
-//        }
-//        livro.setStatusDisponivel(true);
-//        return livroRepository.atualizar(livro);
-//    }
 }

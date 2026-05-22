@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild } fr
 import { Button } from 'primeng/button';
 import { LivroService } from '../../services/livro-service/livro-service';
 import { CategoriasService } from '../../services/categoria-service/categorias-service';
-import { CategoriaModel } from '../../models/CategoriaModel';
+import { CategoriaModel } from '../../models/categoria.model';
 import { LivroCadastroModel, LivroModel, Status } from '../../models/livro.model';
 import { Tag } from 'primeng/tag';
 import { Dialog } from 'primeng/dialog';
@@ -52,7 +52,6 @@ export class LivrosList implements OnInit, OnDestroy {
   livros: LivroModel[] = [];
   categorias: CategoriaModel[] = [];
   paginaAtual = 0;
-  totalPaginas = 0;
   totalElementos = 0;
 
   dialogoVisivel = false;
@@ -99,7 +98,6 @@ export class LivrosList implements OnInit, OnDestroy {
       .subscribe({
         next: (dados) => {
           this.livros = dados.content;
-          this.totalPaginas = dados.page.totalPages;
           this.totalElementos = dados.page.totalElements;
           this.cd.markForCheck();
         },
@@ -107,7 +105,7 @@ export class LivrosList implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `Erro ao carregar livros: ${err.error}`,
+            detail: `Erro ao carregar livros: ${err.name}`,
           });
           console.error('Erro ao carregar livros:', err);
         },

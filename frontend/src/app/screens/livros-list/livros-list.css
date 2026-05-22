@@ -41,28 +41,6 @@
   width: 100%;
 }
 
-.livros-empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 2rem 1rem;
-}
-
-.livros-empty-icon {
-  font-size: 3rem;
-  color: var(--p-text-muted-color);
-  margin-bottom: 1rem;
-  opacity: 0.5;
-}
-
-.livros-empty-text {
-  color: var(--p-text-muted-color);
-  margin: 0 0 1.5rem 0;
-  font-size: 1rem;
-}
-
 .livro-card {
   background: var(--p-content-background);
   border: 1px solid var(--p-content-border-color);
@@ -189,17 +167,6 @@
 
 ::ng-deep .dialog-cadastro {
   width: 40rem;
-}
-
-.form-row-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-}
-
-.server-error {
-  margin-bottom: 1rem;
-  font-weight: 500;
 }
 
 ::ng-deep .dialog-cadastro .p-select,

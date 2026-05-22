@@ -1,4 +1,4 @@
-package com.murilo.library.entities.dto;
+package com.murilo.library.entities.dto.categoria;
 
 import jakarta.validation.constraints.NotBlank;
 

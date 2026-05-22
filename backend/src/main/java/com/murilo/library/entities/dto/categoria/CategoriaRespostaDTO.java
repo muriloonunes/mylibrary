@@ -1,4 +1,4 @@
-package com.murilo.library.entities.dto;
+package com.murilo.library.entities.dto.categoria;
 
 import com.murilo.library.entities.Categoria;
 

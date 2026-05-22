@@ -18,6 +18,7 @@ export class Sidebar implements OnInit {
   itensMenu = [
     {label: 'Livros', icon: 'pi pi-book', rota: '/livros'},
     {label: 'Categorias', icon: 'pi pi-tags', rota: '/categorias'},
+    {label: 'Empréstimos', icon: 'pi pi-sign-out', rota: '/emprestimos'},
   ]
   colapsada: boolean = false;
   modoEscuro: boolean = false;

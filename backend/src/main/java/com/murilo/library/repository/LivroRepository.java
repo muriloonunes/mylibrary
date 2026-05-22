@@ -9,6 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
  *
  * @author Murilo Nunes <murilo_no@outlook.com>
@@ -33,4 +36,6 @@ public interface LivroRepository extends JpaRepository<Livro, Long> {
     boolean existsByCategoriaId(Long categoriaId);
 
     boolean existsByIdAndStatus(Long id, Status status);
+
+    Optional<List<Livro>> findByStatus(Status status);
 }

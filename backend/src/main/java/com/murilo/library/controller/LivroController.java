@@ -2,8 +2,8 @@ package com.murilo.library.controller;
 
 import com.murilo.library.entities.Livro;
 import com.murilo.library.entities.Status;
-import com.murilo.library.entities.dto.LivroCadastroDTO;
-import com.murilo.library.entities.dto.LivroRespostaDTO;
+import com.murilo.library.entities.dto.livro.LivroCadastroDTO;
+import com.murilo.library.entities.dto.livro.LivroRespostaDTO;
 import com.murilo.library.service.LivroService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -13,6 +13,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  *
@@ -44,6 +46,11 @@ public class LivroController {
     ) {
         Page<LivroRespostaDTO> livros = service.buscarLivros(paginacao, busca, categoriaId, status).map(LivroRespostaDTO::new);
         return ResponseEntity.ok(livros);
+    }
+
+    @GetMapping("/disponiveis")
+    public ResponseEntity<List<LivroRespostaDTO>> listarDisponiveis() {
+        return ResponseEntity.ok(service.buscarLivrosDisponiveis().stream().map(LivroRespostaDTO::new).toList());
     }
 
     @GetMapping("/{id}")

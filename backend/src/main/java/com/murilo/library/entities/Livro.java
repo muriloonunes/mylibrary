@@ -1,5 +1,6 @@
 package com.murilo.library.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.time.Year;
+import java.util.List;
 
 /**
  *
@@ -37,6 +39,9 @@ public class Livro {
     @JoinColumn(name = "categoria_id")
     @JsonManagedReference
     private Categoria categoria;
+    @OneToMany(mappedBy = "livro")
+    @JsonBackReference
+    private List<Emprestimo> emprestimos;
 
     public Livro() {
     }
@@ -125,5 +130,13 @@ public class Livro {
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
+    }
+
+    public List<Emprestimo> getEmprestimos() {
+        return emprestimos;
+    }
+
+    public void adicionarEmprestimo(Emprestimo emprestimo) {
+        this.emprestimos.add(emprestimo);
     }
 }
