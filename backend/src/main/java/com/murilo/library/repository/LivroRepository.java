@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  *
@@ -37,5 +36,7 @@ public interface LivroRepository extends JpaRepository<Livro, Long> {
 
     boolean existsByIdAndStatus(Long id, Status status);
 
-    Optional<List<Livro>> findByStatus(Status status);
+    List<Livro> findByStatus(Status status);
+
+    long countByStatus(Status status);
 }

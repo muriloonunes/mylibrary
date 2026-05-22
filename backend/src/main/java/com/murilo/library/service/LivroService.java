@@ -47,6 +47,14 @@ public class LivroService {
         return livroRepository.save(livro);
     }
 
+    public Long contar() {
+        return livroRepository.count();
+    }
+
+    public Long contarPorStatus(Status status) {
+        return livroRepository.countByStatus(status);
+    }
+
     public List<Livro> listarLivros() {
         return livroRepository.findAll();
     }
@@ -60,9 +68,11 @@ public class LivroService {
     }
 
     public List<Livro> buscarLivrosDisponiveis() {
-        return livroRepository.findByStatus(Status.DISPONIVEL).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não há livros disponíveis")
-        );
+        var disponiveis = livroRepository.findByStatus(Status.DISPONIVEL);
+        if (disponiveis.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Não há livros disponíveis");
+        }
+        return disponiveis;
     }
 
     public Livro buscarPorId(Long id) {

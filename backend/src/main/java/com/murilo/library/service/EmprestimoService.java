@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  *
@@ -88,6 +89,10 @@ public class EmprestimoService {
     public Page<Emprestimo> listarAbertos(Pageable pageable) {
         var hoje = LocalDate.now();
         return emprestimoRepository.findAbertos(hoje, pageable);
+    }
+
+    public List<Emprestimo> listarRecentes() {
+        return emprestimoRepository.findFirst5ByOrderByIdDesc();
     }
 
     public long contar() {
