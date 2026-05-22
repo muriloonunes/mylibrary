@@ -67,10 +67,11 @@ export class EmprestimosCadastro implements OnInit {
 
     const dadosParaEnviar = {
       ...this.novoEmprestimo,
+      dataEmprestimo: dateWithoutTimezone(this.novoEmprestimo.dataEmprestimo),
+      dataPrevista: dateWithoutTimezone(this.novoEmprestimo.dataEmprestimo),
       telefone: this.novoEmprestimo.telefone.replace(/\D/g, ''),
     };
 
-    console.log(dadosParaEnviar);
     this.emprestimoService.criarEmprestimo(dadosParaEnviar).subscribe({
       next: () => {
         this.messageService.add({
@@ -93,7 +94,6 @@ export class EmprestimosCadastro implements OnInit {
   protected carregarLivros() {
     this.livroService.obterLivrosDisponiveis().subscribe({
       next: (livros) => {
-        console.log(livros);
         this.livrosDisponiveis = livros;
         this.livrosFiltrados = [...livros];
         this.cd.markForCheck();
@@ -121,3 +121,8 @@ export class EmprestimosCadastro implements OnInit {
     this.router.navigate(['/emprestimos']);
   }
 }
+//https://dev.to/shubhampatilsd/removing-timezones-from-dates-in-javascript-46ah
+export const dateWithoutTimezone = (date: Date) => {
+  const tzoffset = date.getTimezoneOffset() * 60000; //offset in milliseconds
+  return new Date(date.valueOf() - tzoffset).toISOString().slice(0, -1);
+};

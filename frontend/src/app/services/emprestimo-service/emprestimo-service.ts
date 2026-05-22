@@ -25,7 +25,13 @@ export class EmprestimoService {
     return this.http.get<Page<EmprestimoExibicaoModel>>(this.apiUrl, { params });
   }
 
-  criarEmprestimo(emprestimo: EmprestimoCadastroModel): Observable<EmprestimoExibicaoModel> {
+  criarEmprestimo(emprestimo: {
+    livroId: number | null;
+    nomePessoa: string;
+    telefone: string;
+    dataEmprestimo: string;
+    dataPrevista: string;
+  }): Observable<EmprestimoExibicaoModel> {
     return this.http.post<EmprestimoExibicaoModel>(this.apiUrl, emprestimo);
   }
 
