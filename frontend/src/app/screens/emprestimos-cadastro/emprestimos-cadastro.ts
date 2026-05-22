@@ -68,7 +68,7 @@ export class EmprestimosCadastro implements OnInit {
     const dadosParaEnviar = {
       ...this.novoEmprestimo,
       dataEmprestimo: dateWithoutTimezone(this.novoEmprestimo.dataEmprestimo),
-      dataPrevista: dateWithoutTimezone(this.novoEmprestimo.dataEmprestimo),
+      dataPrevista: dateWithoutTimezone(this.novoEmprestimo.dataPrevista!),
       telefone: this.novoEmprestimo.telefone.replace(/\D/g, ''),
     };
 
