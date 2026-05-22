@@ -107,7 +107,7 @@
         <small class="error-message server-error">{{ erroBackend }}</small>
       }
       <div class="form-actions">
-        <p-button label="Cancelar" severity="secondary" type="button"></p-button>
+        <p-button label="Cancelar" severity="secondary" type="button" (onClick)="voltar()"></p-button>
         <p-button label="Confirmar Empréstimo" type="submit" [disabled]="cadastroForm.invalid"></p-button>
       </div>
     </form>
