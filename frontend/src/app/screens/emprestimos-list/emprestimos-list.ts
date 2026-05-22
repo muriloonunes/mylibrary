@@ -10,10 +10,11 @@ import { DatePipe } from '@angular/common';
 import { Tag } from 'primeng/tag';
 import { Router } from '@angular/router';
 import { EmprestimoService } from '../../services/emprestimo-service/emprestimo-service';
+import { Tooltip } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-emprestimos-list',
-  imports: [Button, Toast, Tabs, TabList, Tab, Badge, TableModule, DatePipe, Tag],
+  imports: [Button, Toast, Tabs, TabList, Tab, Badge, TableModule, DatePipe, Tag, Tooltip],
   providers: [MessageService],
   templateUrl: './emprestimos-list.html',
   styleUrl: './emprestimos-list.css',

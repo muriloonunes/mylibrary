@@ -1,4 +1,4 @@
-export type StatusEmprestimo = 'ATIVO' | 'ATRASADO' | 'DEVOLVIDO';
+export type StatusEmprestimo = 'ATIVO' | 'VENCE HOJE' | 'ATRASADO' | 'DEVOLVIDO';
 
 export interface EmprestimoCadastroModel {
   livroId: number | null;

@@ -34,6 +34,9 @@ public record EmprestimoRespostaDTO(
         if (emprestimo.getDataDevolucaoPrevista().isBefore(LocalDate.now())) {
             return "ATRASADO";
         }
+        if (emprestimo.getDataDevolucaoPrevista().equals(LocalDate.now())) {
+            return "VENCE HOJE";
+        }
         return "ATIVO";
     }
 }

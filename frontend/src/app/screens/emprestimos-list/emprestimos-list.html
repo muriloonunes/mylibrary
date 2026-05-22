@@ -65,7 +65,9 @@
             <td>{{ emprestimo.dataEmprestimo | date:'dd/MM/yyyy' }}</td>
             <td>{{ emprestimo.dataPrevista | date:'dd/MM/yyyy' }}</td>
             <td>
-              <p-tag [value]="emprestimo.status" [severity]="getSeverityTag(emprestimo.status)"></p-tag>
+              <p-tag [value]="emprestimo.status" [severity]="getSeverityTag(emprestimo.status)"
+                     pTooltip="Devolvido em {{ emprestimo.dataDevolucao | date:'dd/MM/yyyy' }}"
+                     [tooltipDisabled]="emprestimo.status !== 'DEVOLVIDO'"></p-tag>
             </td>
             <td style="text-align: center;">
               <p-button icon="pi pi-check" label="Devolver" severity="success"
