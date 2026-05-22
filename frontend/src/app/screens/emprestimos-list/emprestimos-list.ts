@@ -63,7 +63,7 @@ export class EmprestimosList implements OnInit {
 
   private carregarEmprestimos() {
     this.estaCarregando = true;
-    const statusFiltro = this.abaAtiva === 'TODOS' ? null : this.abaAtiva;
+    const statusFiltro = this.abaAtiva === 'todos' ? null : this.abaAtiva;
 
     this.emprestimoService
       .obterEmprestimos(this.paginaAtual, this.tamanhoPagina, statusFiltro)

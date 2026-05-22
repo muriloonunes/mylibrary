@@ -41,11 +41,11 @@ public class EmprestimoController {
     ) {
         IO.println("Status recebido: " + status);
         Page<EmprestimoRespostaDTO> emprestimos;
-        if (status.equalsIgnoreCase("DEVOLVIDOS")) {
+        if ("DEVOLVIDOS".equalsIgnoreCase(status)) {
             emprestimos = emprestimoService.listarDevolvidos(paginacao).map(EmprestimoRespostaDTO::new);
-        } else if (status.equalsIgnoreCase("ATRASADOS")) {
+        } else if ("ATRASADOS".equalsIgnoreCase(status)) {
             emprestimos = emprestimoService.listarAtrasados(paginacao).map(EmprestimoRespostaDTO::new);
-        } else if (status.equalsIgnoreCase("ATIVOS")) {
+        } else if ("ABERTOS".equalsIgnoreCase(status)) {
             emprestimos = emprestimoService.listarAbertos(paginacao).map(EmprestimoRespostaDTO::new);
         } else {
             emprestimos = emprestimoService.listar(paginacao).map(EmprestimoRespostaDTO::new);
