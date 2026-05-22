@@ -1,16 +1,16 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { Button } from 'primeng/button';
-import { Toast } from 'primeng/toast';
-import { Tab, TabList, Tabs } from 'primeng/tabs';
-import { MessageService } from 'primeng/api';
-import { EmprestimoExibicaoModel, StatusEmprestimo } from '../../models/emprestimo.model';
-import { Badge } from 'primeng/badge';
-import { TableLazyLoadEvent, TableModule } from 'primeng/table';
-import { DatePipe } from '@angular/common';
-import { Tag } from 'primeng/tag';
-import { Router } from '@angular/router';
-import { EmprestimoService } from '../../services/emprestimo-service/emprestimo-service';
-import { Tooltip } from 'primeng/tooltip';
+import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {Button} from 'primeng/button';
+import {Toast} from 'primeng/toast';
+import {Tab, TabList, Tabs} from 'primeng/tabs';
+import {MessageService} from 'primeng/api';
+import {EmprestimoExibicaoModel, StatusEmprestimo} from '../../models/emprestimo.model';
+import {Badge} from 'primeng/badge';
+import {TableLazyLoadEvent, TableModule} from 'primeng/table';
+import {DatePipe} from '@angular/common';
+import {Tag} from 'primeng/tag';
+import {ActivatedRoute, Router} from '@angular/router';
+import {EmprestimoService} from '../../services/emprestimo-service/emprestimo-service';
+import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-emprestimos-list',
@@ -21,6 +21,7 @@ import { Tooltip } from 'primeng/tooltip';
 })
 export class EmprestimosList implements OnInit {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private emprestimoService = inject(EmprestimoService);
   private messageService = inject(MessageService);
   private cd = inject(ChangeDetectorRef);
@@ -39,6 +40,19 @@ export class EmprestimosList implements OnInit {
   totalAtrasados = 0;
 
   ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      const tab = params['tab'];
+      if (tab === 'todos' || tab === 'abertos' || tab === 'atrasados') {
+        this.abaAtiva = tab;
+      } else {
+        this.abaAtiva = 'todos';
+      }
+
+      if (this.carregamentoInicialConcluido) {
+        this.paginaAtual = 0;
+        this.carregarEmprestimos();
+      }
+    })
     this.carregarResumo();
     this.carregarEmprestimos();
   }
@@ -60,6 +74,12 @@ export class EmprestimosList implements OnInit {
       this.paginaAtual = 0;
       this.carregarEmprestimos();
     }
+    const queryParams = novaAba === 'atrasados' ? { tab: novaAba } : null;
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: queryParams
+    });
   }
 
   private carregarEmprestimos() {
@@ -157,5 +177,21 @@ export class EmprestimosList implements OnInit {
 
   protected novoEmprestimo() {
     this.router.navigate(['/emprestimos/novo']);
+  }
+
+  protected calcularAtraso(dataPrevista: string): string {
+    const [ano, mes, dia] = dataPrevista.split('-').map(Number);
+    const prevista = new Date(ano, mes - 1, dia);
+    const hoje = new Date();
+
+    prevista.setHours(0, 0, 0, 0);
+    hoje.setHours(0, 0, 0, 0);
+
+    const diffMs = hoje.getTime() - prevista.getTime();
+    const dias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    if (dias > 1) {
+      return `${dias} dias`;
+    }
+    return `${dias} dia`
   }
 }

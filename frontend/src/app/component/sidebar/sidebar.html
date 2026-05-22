@@ -11,12 +11,35 @@
   </div>
 
   <ul class="menu-list">
-    @for (item of itensMenu; track item) {
-      <li [routerLink]="item.rota"
-          routerLinkActive="active-menu"
-          class="menu-item">
-        <i [class]="item.icon"></i>
-        <span class="menu-label">{{ item.label }}</span>
+    @for (item of itensMenu; track item.label) {
+      <li>
+        <a [routerLink]="item.rota" routerLinkActive="active-menu" [routerLinkActiveOptions]="{ exact: !item.filhos }"
+           class="menu-item" (click)="toggleSubmenu(item)">
+          <i [class]="item.icon"></i>
+          @if (!colapsada) {
+            <span class="menu-label">{{ item.label }}</span>
+            @if (item.filhos) {
+              <i class="pi submenu-arrow" [ngClass]="item.aberto ? 'pi-chevron-down' : 'pi-chevron-right'"
+              (click)="toggleSeta(item, $event)"></i>
+            }
+          }
+        </a>
+
+        @if (item.filhos && item.aberto && !colapsada) {
+          <ul class="submenu-list">
+            @for (filho of item.filhos; track filho.label) {
+              <li>
+                <a [routerLink]="filho.rota"
+                   [queryParams]="filho.queryParams"
+                   routerLinkActive="active-submenu-item"
+                   class="menu-item submenu-item">
+                  <i [class]="filho.icon"></i>
+                  <span class="menu-label">{{ filho.label }}</span>
+                </a>
+              </li>
+            }
+          </ul>
+        }
       </li>
     }
   </ul>

@@ -54,6 +54,9 @@
             <th>Data Empréstimo</th>
             <th>Data Prevista</th>
             <th>Status</th>
+            @if (abaAtiva === 'atrasados') {
+              <th>Dias de atraso</th>
+            }
             <th></th>
           </tr>
         </ng-template>
@@ -69,6 +72,9 @@
                      pTooltip="Devolvido em {{ emprestimo.dataDevolucao | date:'dd/MM/yyyy' }}"
                      [tooltipDisabled]="emprestimo.status !== 'DEVOLVIDO'"></p-tag>
             </td>
+            @if (abaAtiva === 'atrasados' && emprestimo.status === 'ATRASADO') {
+              <td>{{ calcularAtraso(emprestimo.dataPrevista) }}</td>
+            }
             <td style="text-align: center;">
               <p-button icon="pi pi-check" label="Devolver" severity="success"
                         styleClass="p-button-sm p-button-outlined" (onClick)="devolver(emprestimo)"

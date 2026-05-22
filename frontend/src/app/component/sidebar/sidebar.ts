@@ -15,10 +15,21 @@ import {Button} from 'primeng/button';
   styleUrl: './sidebar.css',
 })
 export class Sidebar implements OnInit {
-  itensMenu = [
+  itensMenu: MenuItem[] = [
     {label: 'Livros', icon: 'pi pi-book', rota: '/livros'},
     {label: 'Categorias', icon: 'pi pi-tags', rota: '/categorias'},
-    {label: 'Empréstimos', icon: 'pi pi-sign-out', rota: '/emprestimos'},
+    {
+      label: 'Empréstimos', icon: 'pi pi-sign-out', rota: '/emprestimos',
+      aberto: false,
+      filhos: [
+        {
+          label: 'Atrasados',
+          icon: 'pi pi-exclamation-triangle',
+          rota: '/emprestimos',
+          queryParams: {tab: 'atrasados'}
+        }
+      ]
+    },
   ]
   colapsada: boolean = false;
   modoEscuro: boolean = false;
@@ -34,6 +45,17 @@ export class Sidebar implements OnInit {
 
   toggleColapsada() {
     this.colapsada = !this.colapsada;
+    if (this.colapsada) {
+      this.itensMenu.forEach(item => item.aberto = false);
+    }
+  }
+
+  toggleSubmenu(item: MenuItem) {
+    if (item.filhos) {
+      if (!item.aberto) {
+        item.aberto = true;
+      }
+    }
   }
 
   toggleTema() {
@@ -44,5 +66,12 @@ export class Sidebar implements OnInit {
     } else {
       document.documentElement.classList.remove('app-dark');
     }
+  }
+
+  protected toggleSeta(item: MenuItem, event: PointerEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    item.aberto = !item.aberto;
   }
 }
