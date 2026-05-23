@@ -1,3 +1,5 @@
+import { EmprestimoExibicaoModel } from './emprestimo.model';
+
 export type Status = 'DISPONIVEL' | 'EMPRESTADO';
 
 export interface LivroModel {
@@ -16,4 +18,8 @@ export interface LivroCadastroModel {
   isbn: string;
   anoPublicacao: number | null;
   categoriaId: number | null;
+}
+
+export interface LivroDetalhesModel extends LivroModel {
+  historicoEmprestimos: EmprestimoExibicaoModel[];
 }

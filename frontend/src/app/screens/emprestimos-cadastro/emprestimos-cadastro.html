@@ -15,12 +15,12 @@
       <div class="form-group">
         <label for="livroId" class="form-label">Livro*</label>
         <p-auto-complete id="livroId" name="livroId"
-                         [(ngModel)]="novoEmprestimo.livroId"
+                         [(ngModel)]="livroSelecionado"
                          [suggestions]="livrosFiltrados"
                          (completeMethod)="filtrarLivros($event)"
                          [dropdown]="true" [required]="true" [virtualScroll]="true"
                          [virtualScrollItemSize]="50"
-                         optionLabel="titulo" optionValue="id"
+                         optionLabel="titulo"
                          placeholder="Selecione um livro disponível"
                          #livroVar="ngModel" appendTo="body"
                          pTooltip="Digite para pesquisar"

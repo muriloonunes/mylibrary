@@ -81,6 +81,12 @@ public class LivroService {
         );
     }
 
+    public Livro obterDetalhes(Long id) {
+        return livroRepository.findByIdComHistorico(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Livro não encontrado")
+        );
+    }
+
     public void deletar(Long id) {
         if (!livroRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Livro não encontrado");

@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {LivroCadastroModel, LivroModel} from '../../models/livro.model';
+import { LivroCadastroModel, LivroDetalhesModel, LivroModel } from '../../models/livro.model';
 import {Page} from '../../models/page.model';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
@@ -30,11 +30,15 @@ export class LivroService {
       params = params.set('status', status);
     }
 
-    return this.http.get<Page<LivroModel>>(this.apiUrl, {params});
+    return this.http.get<Page<LivroModel>>(this.apiUrl, { params });
   }
 
   obterLivrosDisponiveis(): Observable<LivroModel[]> {
     return this.http.get<LivroModel[]>(`${this.apiUrl}/disponiveis`);
+  }
+
+  obterPorId(id: number): Observable<LivroDetalhesModel> {
+    return this.http.get<LivroDetalhesModel>(`${this.apiUrl}/${id}`);
   }
 
   criarLivro(livro: LivroCadastroModel): Observable<LivroModel> {

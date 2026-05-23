@@ -3,6 +3,7 @@ package com.murilo.library.controller;
 import com.murilo.library.entities.Livro;
 import com.murilo.library.entities.Status;
 import com.murilo.library.entities.dto.livro.LivroCadastroDTO;
+import com.murilo.library.entities.dto.livro.LivroDetalhesDTO;
 import com.murilo.library.entities.dto.livro.LivroRespostaDTO;
 import com.murilo.library.service.LivroService;
 import jakarta.validation.Valid;
@@ -54,8 +55,8 @@ public class LivroController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LivroRespostaDTO> buscar(@PathVariable Long id) {
-        return ResponseEntity.ok(new LivroRespostaDTO(service.buscarPorId(id)));
+    public ResponseEntity<LivroDetalhesDTO> buscar(@PathVariable Long id) {
+        return ResponseEntity.ok(new LivroDetalhesDTO(service.obterDetalhes(id)));
     }
 
     @DeleteMapping("/{id}")
