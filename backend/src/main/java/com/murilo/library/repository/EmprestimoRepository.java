@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  *
@@ -29,6 +30,8 @@ public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long> {
     @Query("SELECT COUNT(e) FROM Emprestimo e WHERE e.dataDevolucaoPrevista >= :hoje AND e.dataDevolucaoEfetiva IS NULL")
     long contarAbertos(LocalDate hoje);
 
-    @Query("SELECT COUNT(e) FROm Emprestimo e WHERE e.dataDevolucaoPrevista < :hoje AND e.dataDevolucaoEfetiva IS NULL")
+    @Query("SELECT COUNT(e) FROM Emprestimo e WHERE e.dataDevolucaoPrevista < :hoje AND e.dataDevolucaoEfetiva IS NULL")
     long contarAtrasados(LocalDate hoje);
+
+    List<Emprestimo> findFirst5ByOrderByIdDesc();
 }

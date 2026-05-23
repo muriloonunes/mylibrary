@@ -16,6 +16,7 @@ import {Button} from 'primeng/button';
 })
 export class Sidebar implements OnInit {
   itensMenu: MenuItem[] = [
+    {label: 'Dashboard', icon: 'pi pi-home', rota: '/home'},
     {label: 'Livros', icon: 'pi pi-book', rota: '/livros'},
     {label: 'Categorias', icon: 'pi pi-tags', rota: '/categorias'},
     {
