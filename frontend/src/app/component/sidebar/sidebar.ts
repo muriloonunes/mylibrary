@@ -1,0 +1,78 @@
+import {Component, OnInit} from '@angular/core';
+import {NgClass} from '@angular/common';
+import {RouterLink, RouterLinkActive} from '@angular/router';
+import {Button} from 'primeng/button';
+
+@Component({
+  selector: 'app-sidebar',
+  imports: [
+    NgClass,
+    Button,
+    RouterLinkActive,
+    RouterLink
+  ],
+  templateUrl: './sidebar.html',
+  styleUrl: './sidebar.css',
+})
+export class Sidebar implements OnInit {
+  itensMenu: MenuItem[] = [
+    {label: 'Dashboard', icon: 'pi pi-home', rota: '/home'},
+    {label: 'Livros', icon: 'pi pi-book', rota: '/livros'},
+    {label: 'Categorias', icon: 'pi pi-tags', rota: '/categorias'},
+    {
+      label: 'Empréstimos', icon: 'pi pi-sign-out', rota: '/emprestimos',
+      aberto: false,
+      filhos: [
+        {
+          label: 'Atrasados',
+          icon: 'pi pi-exclamation-triangle',
+          rota: '/emprestimos',
+          queryParams: {tab: 'atrasados'}
+        }
+      ]
+    },
+  ]
+  colapsada: boolean = false;
+  modoEscuro: boolean = false;
+
+  ngOnInit(): void {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (prefersDark) {
+      this.modoEscuro = true;
+      document.documentElement.classList.add('app-dark');
+    }
+  }
+
+  toggleColapsada() {
+    this.colapsada = !this.colapsada;
+    if (this.colapsada) {
+      this.itensMenu.forEach(item => item.aberto = false);
+    }
+  }
+
+  toggleSubmenu(item: MenuItem) {
+    if (item.filhos) {
+      if (!item.aberto) {
+        item.aberto = true;
+      }
+    }
+  }
+
+  toggleTema() {
+    this.modoEscuro = !this.modoEscuro;
+
+    if (this.modoEscuro) {
+      document.documentElement.classList.add('app-dark');
+    } else {
+      document.documentElement.classList.remove('app-dark');
+    }
+  }
+
+  protected toggleSeta(item: MenuItem, event: PointerEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    item.aberto = !item.aberto;
+  }
+}

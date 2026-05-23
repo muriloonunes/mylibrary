@@ -1,0 +1,92 @@
+.categorias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+@media (min-width: 1200px) {
+  .categorias-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Cards Comuns */
+::ng-deep .categoria-card, ::ng-deep .card-criar {
+  height: 100%;
+  border: 1px solid var(--p-content-border-color) !important;
+  border-radius: 12px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+::ng-deep .categoria-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.card-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.card-text h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--p-text-color);
+}
+
+.description {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--p-text-muted-color);
+}
+
+.apagar-botao {
+  border-radius: 8px;
+}
+
+::ng-deep .dialog-cadastro {
+  width: 40rem;
+}
+
+/* Card Criar Específico */
+::ng-deep .card-criar {
+  border-style: dashed !important;
+  background: transparent !important;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+::ng-deep .card-criar:hover {
+  border-color: var(--p-primary-color) !important;
+  background: var(--p-content-hover-background) !important;
+  border-style: solid !important;
+  transform: translateY(-4px) scale(1.02);
+}
+
+.row-layout {
+  justify-content: flex-start;
+}
+
+.criar-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background-color: rgba(var(--p-primary-color-rgb, 234, 108, 134), 0.15);
+  color: var(--p-primary-color);
+  flex-shrink: 0;
+}
+
+::ng-deep .card-criar:hover .criar-icon-wrapper {
+  transform: scale(1.05);
+}
