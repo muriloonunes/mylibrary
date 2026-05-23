@@ -1,15 +1,19 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {DashboardService} from '../../services/dashboard-service/dashboard-service';
-import {DashboardResultados} from '../../models/dashboard.model';
-import {MessageService} from 'primeng/api';
-import {Toast} from 'primeng/toast';
-import {StatusEmprestimo} from '../../models/emprestimo.model';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { DashboardService } from '../../services/dashboard-service/dashboard-service';
+import { DashboardResultados } from '../../models/dashboard.model';
+import { MessageService } from 'primeng/api';
+import { Toast } from 'primeng/toast';
+import { StatusEmprestimo } from '../../models/emprestimo.model';
+import { Skeleton } from 'primeng/skeleton';
+import { Button } from 'primeng/button';
+import { TableModule } from 'primeng/table';
+import { DatePipe } from '@angular/common';
+import { Tag } from 'primeng/tag';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [
-    Toast
-  ],
+  imports: [Toast, Skeleton, Button, TableModule, DatePipe, Tag],
   providers: [MessageService],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
@@ -17,6 +21,8 @@ import {StatusEmprestimo} from '../../models/emprestimo.model';
 export class Dashboard implements OnInit {
   private service = inject(DashboardService);
   private messageService = inject(MessageService);
+  private router = inject(Router);
+  private cd = inject(ChangeDetectorRef);
 
   dadosDashboard: DashboardResultados | null = null;
   carregando = true;
@@ -30,19 +36,18 @@ export class Dashboard implements OnInit {
       next: (dados) => {
         this.dadosDashboard = dados;
         this.carregando = false;
+        this.cd.markForCheck();
       },
       error: (err) => {
         this.carregando = false;
-        this.messageService.add(
-          {
-            severity: 'error',
-            summary: 'Erro',
-            detail: `Erro ao carregar dados do dashboard: ${err.name}`,
-          }
-        )
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Erro ao carregar dados do dashboard: ${err.name}`,
+        });
         console.error('Erro ao carregar dados do dashboard:', err);
       },
-    })
+    });
   }
 
   getSeverityTag(status: StatusEmprestimo): 'success' | 'warn' | 'danger' | 'info' | 'secondary' {
@@ -58,5 +63,9 @@ export class Dashboard implements OnInit {
       default:
         return 'secondary';
     }
+  }
+
+  protected verTodosEmprestimos() {
+    this.router.navigate(['/emprestimos']);
   }
 }

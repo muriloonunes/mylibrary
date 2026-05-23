@@ -40,6 +40,20 @@ html, body {
   color: var(--p-text-muted-color); /* Cor mais neutra/acinzentada */
 }
 
+/*tabela*/
+.table-container {
+  background: var(--p-content-background);
+  border: 1px solid var(--p-content-border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+::ng-deep .p-datatable .p-datatable-header,
+::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  border-bottom: 1px solid var(--p-content-border-color);
+}
+
 /* Dialog e Form */
 ::ng-deep .dialog-cadastro {
   width: 40rem;
@@ -107,7 +121,6 @@ html, body {
   margin: 0 0 1.5rem 0;
   font-size: 1.3rem;
 }
-
 
 /* Misc */
 ::ng-deep .p-button:disabled {
