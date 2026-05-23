@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, inject, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MessageService, PrimeTemplate } from 'primeng/api';
 import { LivroService } from '../../services/livro-service/livro-service';
 import { LivroModel } from '../../models/livro.model';
@@ -8,7 +8,7 @@ import { EmprestimoCadastroModel } from '../../models/emprestimo.model';
 import { Button } from 'primeng/button';
 import { Toast } from 'primeng/toast';
 import { FormsModule, NgForm } from '@angular/forms';
-import { NgClass } from '@angular/common';
+import { Location, NgClass } from '@angular/common';
 import { InputMask, InputMaskDirective } from 'primeng/inputmask';
 import { InputText } from 'primeng/inputtext';
 import { DatePicker } from 'primeng/datepicker';
@@ -35,7 +35,8 @@ import { Tooltip } from 'primeng/tooltip';
   styleUrl: './emprestimos-cadastro.css',
 })
 export class EmprestimosCadastro implements OnInit {
-  private router = inject(Router);
+  private location = inject(Location);
+  private route = inject(ActivatedRoute);
   private messageService = inject(MessageService);
   private cd = inject(ChangeDetectorRef);
   private livroService = inject(LivroService);
@@ -54,19 +55,27 @@ export class EmprestimosCadastro implements OnInit {
     dataPrevista: null,
   };
   erroBackend: string | null = null;
+  livroSelecionado: LivroModel | null = null;
+  private livroIdUrl: number | null = null;
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      if (params['livroId']) {
+        this.livroIdUrl = parseInt(params['livroId'], 10);
+      }
+    });
     this.carregarLivros();
   }
 
   salvarEmprestimo() {
     if (!this.novoEmprestimo) return;
-    if (!this.cadastroForm?.valid) return;
+    if (!this.cadastroForm?.valid || !this.livroSelecionado) return;
 
     this.erroBackend = null;
 
     const dadosParaEnviar = {
       ...this.novoEmprestimo,
+      livroId: this.livroSelecionado.id,
       dataEmprestimo: dateWithoutTimezone(this.novoEmprestimo.dataEmprestimo),
       dataPrevista: dateWithoutTimezone(this.novoEmprestimo.dataPrevista!),
       telefone: this.novoEmprestimo.telefone.replace(/\D/g, ''),
@@ -96,6 +105,9 @@ export class EmprestimosCadastro implements OnInit {
       next: (livros) => {
         this.livrosDisponiveis = livros;
         this.livrosFiltrados = [...livros];
+        if (this.livroIdUrl) {
+          this.livroSelecionado = livros.find((l) => l.id === this.livroIdUrl) || null;
+        }
         this.cd.markForCheck();
       },
       error: (err) => {
@@ -117,8 +129,9 @@ export class EmprestimosCadastro implements OnInit {
     );
   }
 
+  //https://stackoverflow.com/questions/35446955/how-to-go-back-last-page
   protected voltar() {
-    this.router.navigate(['/emprestimos']);
+    this.location.back();
   }
 }
 //https://dev.to/shubhampatilsd/removing-timezones-from-dates-in-javascript-46ah

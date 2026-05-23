@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -39,4 +40,7 @@ public interface LivroRepository extends JpaRepository<Livro, Long> {
     List<Livro> findByStatus(Status status);
 
     long countByStatus(Status status);
+
+    @Query("SELECT l FROM Livro l LEFT JOIN FETCH l.emprestimos WHERE l.id = :id")
+    Optional<Livro> findByIdComHistorico(@Param("id") Long id);
 }

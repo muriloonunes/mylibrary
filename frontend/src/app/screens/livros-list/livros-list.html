@@ -75,7 +75,7 @@
           </div>
         </div>
         <div class="livro-card-footer">
-          <p-button label="Ver Detalhes" styleClass="p-button-outlined p-button-secondary w-full"></p-button>
+          <p-button label="Ver Detalhes" styleClass="p-button-outlined p-button-secondary w-full" (onClick)="verDetalhes(livro.id)"></p-button>
           <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-text"
                     pTooltip="Excluir livro" [disabled]="livro.status === 'EMPRESTADO'"
                     (onClick)="deletarLivro(livro.id)">

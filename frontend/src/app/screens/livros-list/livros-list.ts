@@ -19,6 +19,7 @@ import { debounceTime, Subject, Subscription } from 'rxjs';
 import { Paginator } from 'primeng/paginator';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-livros-list',
@@ -46,6 +47,7 @@ export class LivrosList implements OnInit, OnDestroy {
   private categoriaService = inject(CategoriasService);
   private cd = inject(ChangeDetectorRef);
   private messageService = inject(MessageService);
+  private router = inject(Router);
 
   @ViewChild('criarLivroForm') criarLivroForm!: NgForm;
 
@@ -219,5 +221,9 @@ export class LivrosList implements OnInit, OnDestroy {
 
   private gerarLivroVazio(): LivroCadastroModel {
     return { titulo: '', autor: '', isbn: '', anoPublicacao: null, categoriaId: null };
+  }
+
+  protected verDetalhes(id: number) {
+    this.router.navigate(['/livros', id]);
   }
 }
